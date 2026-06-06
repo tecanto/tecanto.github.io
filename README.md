@@ -1,2 +1,0 @@
-# -tecanto.github.io
-idk
