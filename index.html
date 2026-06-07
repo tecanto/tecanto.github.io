@@ -13,9 +13,14 @@
   --mono:'SFMono-Regular',Consolas,'Liberation Mono',monospace;
 }
 body{background:var(--bg0);color:var(--t1);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;padding:20px 20px 40px;min-height:100vh}
-.topbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--bdrL)}
+.topbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--bdrL);flex-wrap:wrap;row-gap:6px}
 .topbar h1{font-size:13px;font-weight:600;color:var(--t2);letter-spacing:.05em;text-transform:uppercase}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--acc);flex-shrink:0}
+
+/* ── INDICADOR DIRTY ── */
+.dirty-bar{display:none;align-items:center;gap:5px;font-size:11px;color:#e8907a;padding:3px 11px;border-radius:20px;border:1px solid rgba(200,80,50,.35);background:rgba(99,32,20,.22);margin-left:auto;flex-shrink:0;white-space:nowrap}
+.dirty-dot{width:5px;height:5px;border-radius:50%;background:#e8907a;flex-shrink:0}
+
 .lay{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
 .pcol{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:10px;position:sticky;top:20px}
 .ccol{flex:1;min-width:260px}
@@ -55,40 +60,25 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
 .progress-bar.show{display:block}
 .progress-fill{height:100%;background:var(--acc-lt);width:0%;transition:width .2s;border-radius:2px}
 
-/* ── MEMORIA / PERSISTENCIA ── */
-.unsaved-badge{
-  display:none;align-items:center;gap:5px;
-  font-size:11px;color:#c8862a;margin-left:auto;
-  font-weight:500;white-space:nowrap;
-}
-.unsaved-dot{
-  width:6px;height:6px;border-radius:50%;
-  background:#c8862a;flex-shrink:0;
-  animation:pulse-dot 2s ease-in-out infinite;
-}
-@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.2}}
-#save-btn{transition:background .15s,border-color .15s,color .15s}
-#save-btn.dirty{background:rgba(150,90,5,.18);border-color:#7a5008;color:#c8862a}
-#save-btn.dirty:hover{background:rgba(150,90,5,.28)}
+/* ── BARRA DE PERSISTENCIA ── */
+.persist-row{display:flex;gap:5px;flex-wrap:wrap}
+.persist-row .eb{flex:1;min-width:80px;margin-top:0;padding:7px 10px;white-space:nowrap}
 </style>
 </head>
 <body>
+
 <div class="topbar">
   <span class="dot"></span>
   <h1>Editor de Etiqueta</h1>
-  <!-- Insignia de cambios sin guardar -->
-  <span id="unsaved-badge" class="unsaved-badge">
-    <span class="unsaved-dot"></span>Cambios sin guardar
-  </span>
+  <div id="dirtyBar" class="dirty-bar"><span class="dirty-dot"></span>Cambios sin guardar</div>
 </div>
+
 <div class="lay">
+  <!-- ── COLUMNA IZQUIERDA (preview + exportar) ── -->
   <div class="pcol">
     <div class="swrap" id="SW"></div>
     <p class="pl">Vista previa en vivo</p>
     <button class="eb" onclick="exportSVG()">&#8595; Descargar SVG</button>
-    <!-- Nuevos botones de memoria -->
-    <button class="eb" id="save-btn" onclick="saveConfig()">&#10003; Guardar cambios</button>
-    <button class="eb" id="copy-url-btn" onclick="copyConfigURL()">&#8599; Copiar URL de config</button>
     <div class="cg" style="width:100%;margin-bottom:0">
       <h3>Exportar PNG</h3>
       <div class="cr">
@@ -102,7 +92,20 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
     </div>
   </div>
 
+  <!-- ── COLUMNA DERECHA (controles) ── -->
   <div class="ccol">
+
+    <!-- PERSISTENCIA -->
+    <div class="cg">
+      <h3>Guardar configuración</h3>
+      <div class="persist-row">
+        <button class="eb" id="saveBtn" onclick="saveConfig()">Guardar</button>
+        <button class="eb" id="copyURLBtn" onclick="copyConfigURL()">Copiar URL</button>
+        <button class="eb" onclick="resetConfig()">Restablecer</button>
+      </div>
+    </div>
+
+    <!-- COLORES -->
     <div class="cg">
       <h3>Colores del SVG</h3>
       <div class="clr"><span class="cll">Fondo lateral (.s5)</span>
@@ -143,6 +146,8 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
         <input type="text" class="hx" id="h_s7" value="#e9e9e9" onchange="hexInput('s7','fill',this.value)" maxlength="7"/></div>
       </div>
     </div>
+
+    <!-- TEXTURA DE FIBRAS -->
     <div class="cg">
       <h3>Textura de fibras</h3>
       <div class="cr"><span class="cl">Intensidad</span><input type="range" min="0" max=".8" step=".01" value=".25" id="fR" oninput="upd()"/><span class="cv" id="fV">25%</span></div>
@@ -152,11 +157,15 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
         <button class="bb" id="nt2" onclick="setNT('turbulence',this)">Ruido rugoso</button>
       </div></div>
     </div>
+
+    <!-- PATINA -->
     <div class="cg">
       <h3>Patina / manchas</h3>
       <div class="cr"><span class="cl">Intensidad</span><input type="range" min="0" max=".6" step=".01" value=".12" id="sR" oninput="upd()"/><span class="cv" id="sV">12%</span></div>
       <div class="cr"><span class="cl">Escala</span><input type="range" min=".005" max=".05" step=".002" value=".018" id="sfR" oninput="upd()"/><span class="cv" id="sfV">0.018</span></div>
     </div>
+
+    <!-- RELIEVE -->
     <div class="cg">
       <h3>Relieve (emboss)</h3>
       <div class="cr"><span class="cl">Intensidad</span><input type="range" min="0" max="1" step=".02" value=".35" id="eR" oninput="upd()"/><span class="cv" id="eV">35%</span></div>
@@ -166,6 +175,8 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
         <button class="bb" id="eb3" onclick="setEM('hard-light',this)">Hard light</button>
       </div></div>
     </div>
+
+    <!-- SOBREEXPOSICION -->
     <div class="cg">
       <h3>Sobreexposicion (burn)</h3>
       <div class="cr"><span class="cl">Intensidad</span><input type="range" min="0" max=".9" step=".01" value=".25" id="bR" oninput="upd()"/><span class="cv" id="bV">25%</span></div>
@@ -175,10 +186,14 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
         <button class="bb" id="bt2" onclick="setBT('turbulence',this)">Nitido</button>
       </div></div>
     </div>
+
+    <!-- SATURACION -->
     <div class="cg">
       <h3>Saturacion global</h3>
       <div class="cr"><span class="cl">Nivel</span><input type="range" min=".3" max="1" step=".02" value=".82" id="satR" oninput="upd()"/><span class="cv" id="satV">0.82</span></div>
     </div>
+
+    <!-- PRESETS -->
     <div class="cg pcard">
       <h3>Presets rapidos</h3>
       <div class="br">
@@ -188,20 +203,14 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
         <button class="bb" onclick="applyP('antique')">Antiguo</button>
       </div>
     </div>
-  </div>
-</div>
+
+  </div><!-- /ccol -->
+</div><!-- /lay -->
 
 <script>
 const NS='http://www.w3.org/2000/svg';
-let NT='fractalNoise',EM='overlay',BT='fractalNoise';
-let VW=3120,VH=2100;
-
-// ── MEMORIA / PERSISTENCIA ────────────────────────────────────────
-const LS_SAVED   = 'svgEditorConfig';   // config guardada por el usuario
-const LS_PENDING = 'svgEditorPending';  // config temporal de URL (cuando ya había guardada)
-let savedConfig     = null;
-let _suppressDirty  = false;
-let _isDirty        = false;
+let NT='fractalNoise', EM='overlay', BT='fractalNoise';
+let VW=3120, VH=2100;
 
 // ── PEGAR AQUI EL SVG COMPLETO ──────────────────────────────────
 const SVG_SRC=`<svg version="1.2" id="LSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3120 2100" width="3120" height="2100">
@@ -494,10 +503,10 @@ DE VERDAD"  d="m80.4 286h-10.6v-70h10.6v29.5h12.6v-29.5h10.6v70h-10.6v-30.5h-12.
 </svg>`;
 
 const presets={
-  clean: {f:0,   fr:.65, s:0,   sf:.018, e:0,   b:0,   bf:.022, sat:1,   nt:'fractalNoise', em:'overlay',    bt:'fractalNoise'},
-  aged:  {f:.25, fr:.65, s:.12, sf:.018, e:.35, b:.25, bf:.022, sat:.82, nt:'fractalNoise', em:'overlay',    bt:'fractalNoise'},
-  worn:  {f:.45, fr:.8,  s:.28, sf:.025, e:.55, b:.45, bf:.035, sat:.65, nt:'fractalNoise', em:'soft-light', bt:'turbulence'},
-  antique:{f:.65,fr:.55, s:.45, sf:.012, e:.70, b:.65, bf:.015, sat:.45, nt:'turbulence',   em:'overlay',    bt:'fractalNoise'}
+  clean:  {f:0,   fr:.65, s:0,   sf:.018, e:0,   b:0,   bf:.022, sat:1,   nt:'fractalNoise', em:'overlay',    bt:'fractalNoise'},
+  aged:   {f:.25, fr:.65, s:.12, sf:.018, e:.35, b:.25, bf:.022, sat:.82, nt:'fractalNoise', em:'overlay',    bt:'fractalNoise'},
+  worn:   {f:.45, fr:.8,  s:.28, sf:.025, e:.55, b:.45, bf:.035, sat:.65, nt:'fractalNoise', em:'soft-light', bt:'turbulence'},
+  antique:{f:.65, fr:.55, s:.45, sf:.012, e:.70, b:.65, bf:.015, sat:.45, nt:'turbulence',   em:'overlay',    bt:'fractalNoise'}
 };
 
 function g(id){return document.getElementById(id)}
@@ -508,15 +517,232 @@ function mkEl(tag,attrs){
   return e;
 }
 
-// ── INIT ─────────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+// ── PERSISTENCIA ────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
+
+const LS_KEY = 'svgEditor_v1';
+let _savedCfg    = null;   // lo que está en localStorage
+let _isDirty     = false;  // hay cambios sin guardar
+let _suppressDirty = false; // bloquear markDirty durante applyConfig / reset
+
+// Recolecta el estado completo de la UI
+function collectConfig(){
+  return{
+    // Colores
+    s5:g('c_s5').value, s0:g('c_s0').value, s2:g('c_s2').value,
+    s3:g('c_s3').value, gold:g('c_gold').value, s1:g('c_s1').value, s7:g('c_s7').value,
+    // Textura de fibras
+    fi:gv('fR'), fr:gv('frR'), ft:NT,
+    // Patina
+    pi:gv('sR'), ps:gv('sfR'),
+    // Relieve
+    ei:gv('eR'), em:EM,
+    // Burn
+    bi:gv('bR'), bs:gv('bfR'), bt:BT,
+    // Saturacion
+    sat:gv('satR'),
+    // Escala PNG (preferencia de exportacion)
+    pngScale:parseInt(g('pngScaleR').value)
+  };
+}
+
+// Aplica un objeto config a la UI y al SVG
+function applyConfig(cfg){
+  _suppressDirty=true;
+  try{
+    // Colores
+    if(cfg.s5)  setSVGColor('s5','fill',cfg.s5);
+    if(cfg.s0)  {setSVGColor('s0','fill',cfg.s0); setCSSProp('s11','stroke',cfg.s0);}
+    if(cfg.s2)  setSVGColor('s2','fill',cfg.s2);
+    if(cfg.s3)  setSVGColor('s3','fill',cfg.s3);
+    if(cfg.gold) setGold(cfg.gold);
+    if(cfg.s1)  setSVGColor('s1','fill',cfg.s1);
+    if(cfg.s7)  setSVGColor('s7','fill',cfg.s7);
+    // Sliders
+    if(cfg.fi  !==undefined) g('fR').value  = cfg.fi;
+    if(cfg.fr  !==undefined) g('frR').value = cfg.fr;
+    if(cfg.pi  !==undefined) g('sR').value  = cfg.pi;
+    if(cfg.ps  !==undefined) g('sfR').value = cfg.ps;
+    if(cfg.ei  !==undefined) g('eR').value  = cfg.ei;
+    if(cfg.bi  !==undefined) g('bR').value  = cfg.bi;
+    if(cfg.bs  !==undefined) g('bfR').value = cfg.bs;
+    if(cfg.sat !==undefined) g('satR').value= cfg.sat;
+    if(cfg.pngScale)         {g('pngScaleR').value=cfg.pngScale; updPngInfo();}
+    // Modos
+    if(cfg.ft){
+      NT=cfg.ft;
+      g('nt1').classList.toggle('on',NT==='fractalNoise');
+      g('nt2').classList.toggle('on',NT==='turbulence');
+    }
+    if(cfg.em){
+      EM=cfg.em;
+      g('eb1').classList.toggle('on',EM==='overlay');
+      g('eb2').classList.toggle('on',EM==='soft-light');
+      g('eb3').classList.toggle('on',EM==='hard-light');
+    }
+    if(cfg.bt){
+      BT=cfg.bt;
+      g('bt1').classList.toggle('on',BT==='fractalNoise');
+      g('bt2').classList.toggle('on',BT==='turbulence');
+    }
+    upd();
+  }finally{
+    _suppressDirty=false;
+  }
+}
+
+// ── localStorage ─────────────────────────────────────────────────
+function loadLS(){
+  try{const s=localStorage.getItem(LS_KEY); return s?JSON.parse(s):null;}
+  catch(e){return null;}
+}
+function saveLS(c){
+  try{localStorage.setItem(LS_KEY,JSON.stringify(c)); return true;}
+  catch(e){return false;}
+}
+function clearLS(){
+  try{localStorage.removeItem(LS_KEY);}catch(e){}
+}
+
+// ── URL encode / decode ──────────────────────────────────────────
+// Usa btoa (todos los valores son ASCII: colores hex, números, strings de modo)
+function encodeURL(cfg){
+  try{return btoa(JSON.stringify(cfg));}
+  catch(e){return '';}
+}
+function decodeURL(s){
+  try{return JSON.parse(atob(s));}
+  catch(e){return null;}
+}
+function getURLConfig(){
+  try{
+    const p=new URLSearchParams(window.location.search);
+    const c=p.get('c');
+    return c?decodeURL(c):null;
+  }catch(e){return null;}
+}
+function buildURL(cfg){
+  return window.location.origin+window.location.pathname+'?c='+encodeURL(cfg);
+}
+
+// ── Estado dirty ─────────────────────────────────────────────────
+function markDirty(){
+  if(_suppressDirty)return;
+  _isDirty=true;
+  refreshDirtyUI();
+}
+function markClean(){
+  _isDirty=false;
+  refreshDirtyUI();
+}
+function refreshDirtyUI(){
+  const bar=g('dirtyBar'), btn=g('saveBtn');
+  if(bar) bar.style.display=_isDirty?'flex':'none';
+  if(btn){
+    if(_isDirty) btn.classList.add('primary');
+    else         btn.classList.remove('primary');
+  }
+}
+
+// ── Acciones de persistencia ─────────────────────────────────────
+
+function saveConfig(){
+  const cfg=collectConfig();
+  if(saveLS(cfg)){_savedCfg=cfg; markClean();}
+}
+
+function legacyCopy(text){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+  document.body.appendChild(ta); ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+}
+function copyConfigURL(){
+  const url=buildURL(collectConfig());
+  const btn=g('copyURLBtn');
+  const flash=()=>{
+    const orig=btn.textContent;
+    btn.textContent='✓ Copiado';
+    setTimeout(()=>{btn.textContent=orig;},2000);
+  };
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(url).then(flash).catch(()=>{legacyCopy(url);flash();});
+  }else{
+    legacyCopy(url); flash();
+  }
+}
+
+function resetConfig(){
+  if(!confirm('¿Restablecer todos los ajustes a los valores predeterminados?\nSe eliminará la configuración guardada en este navegador.'))return;
+  clearLS();
+  _suppressDirty=true;
+  // Colores por defecto
+  setSVGColor('s5','fill','#632014');
+  setSVGColor('s0','fill','#f0dccf'); setCSSProp('s11','stroke','#f0dccf');
+  setSVGColor('s2','fill','#86190c');
+  setSVGColor('s3','fill','#c01113');
+  setGold('#964b05');
+  setSVGColor('s1','fill','#2a2a2a');
+  setSVGColor('s7','fill','#e9e9e9');
+  // Preset aged (valores iniciales)
+  applyP('aged');
+  g('pngScaleR').value=25; updPngInfo();
+  _suppressDirty=false;
+  _savedCfg=null;
+  markClean();
+}
+
+// ── Init con persistencia ────────────────────────────────────────
+//
+// Lógica de prioridad:
+//   URL config presente + sin localStorage  → guarda URL config en LS, aplica
+//   URL config presente + localStorage OK   → aplica LS (no sobreescribe), ignora URL
+//   Sin URL + localStorage OK               → aplica LS
+//   Sin nada                                → aplica preset 'aged' (sin guardar)
+//
+// En todos los casos limpia la URL con history.replaceState (funciona en GitHub Pages).
+//
+function initWithPersistence(){
+  const urlCfg = getURLConfig();
+  const lsCfg  = loadLS();
+
+  if(urlCfg){
+    // Limpiar la URL sin recargar la página
+    history.replaceState(null,'',window.location.pathname);
+
+    if(!lsCfg){
+      // Sin config guardada: guardar la URL como config propia
+      saveLS(urlCfg);
+      _savedCfg=urlCfg;
+      applyConfig(urlCfg);
+    }else{
+      // Ya tiene config guardada: la URL config se descarta, prioridad al LS
+      _savedCfg=lsCfg;
+      applyConfig(lsCfg);
+    }
+  }else if(lsCfg){
+    _savedCfg=lsCfg;
+    applyConfig(lsCfg);
+  }else{
+    // Nada guardado: aplicar preset aged sin marcar dirty
+    applyP('aged');
+  }
+  markClean();
+}
+
+// ════════════════════════════════════════════════════════════════
+// ── INIT SVG ────────────────────────────────────────────────────
+// ════════════════════════════════════════════════════════════════
 function initSVG(){
   g('SW').innerHTML=SVG_SRC;
   const svg=g('LSVG');
-  if(!svg) return;
+  if(!svg)return;
   const styleEl=svg.querySelector('style');
-  if(styleEl) styleEl.id='SVG_STYLE';
+  if(styleEl)styleEl.id='SVG_STYLE';
   const vb=svg.getAttribute('viewBox');
-  if(vb){const p=vb.trim().split(/[\s,]+/);VW=parseFloat(p[2]);VH=parseFloat(p[3]);}
+  if(vb){const p=vb.trim().split(/[\s,]+/); VW=parseFloat(p[2]); VH=parseFloat(p[3]);}
   updPngInfo();
 }
 
@@ -529,20 +755,20 @@ function rgbToHex(r,g2,b){
   return'#'+[r,g2,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
 }
 function hexToHsl(hex){
-  let[r,g2,b]=hexToRgb(hex);r/=255;g2/=255;b/=255;
+  let[r,g2,b]=hexToRgb(hex); r/=255; g2/=255; b/=255;
   const mx=Math.max(r,g2,b),mn=Math.min(r,g2,b);
   let h=0,s=0,l=(mx+mn)/2;
   if(mx!==mn){
-    const d=mx-mn;s=l>.5?d/(2-mx-mn):d/(mx+mn);
-    if(mx===r)      h=((g2-b)/d+(g2<b?6:0))/6;
-    else if(mx===g2)h=((b-r)/d+2)/6;
-    else            h=((r-g2)/d+4)/6;
+    const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn);
+    if(mx===r)       h=((g2-b)/d+(g2<b?6:0))/6;
+    else if(mx===g2) h=((b-r)/d+2)/6;
+    else             h=((r-g2)/d+4)/6;
   }
   return[h*360,s*100,l*100];
 }
 function hslToHex(h,s,l){
-  h/=360;s/=100;l/=100;
-  const f=n=>{const k=(n+h*12)%12,a=s*Math.min(l,1-l);return l-a*Math.max(-1,Math.min(k-3,9-k,1));};
+  h/=360; s/=100; l/=100;
+  const f=n=>{const k=(n+h*12)%12,a=s*Math.min(l,1-l); return l-a*Math.max(-1,Math.min(k-3,9-k,1));};
   return rgbToHex(Math.round(f(0)*255),Math.round(f(8)*255),Math.round(f(4)*255));
 }
 const GOLD_BASE={s4:'#964b05',s8:'#a6580f',s9:'#bc6b16'};
@@ -561,32 +787,35 @@ function calcGoldTones(nb){
 }
 
 // ── CAMBIO DE COLOR ───────────────────────────────────────────────
-function setCSSProp(cls, prop, hex){
-  const svg=g('LSVG'); if(!svg) return;
-  const styleEl=svg.querySelector('#SVG_STYLE'); if(!styleEl) return;
+function setCSSProp(cls,prop,hex){
+  const svg=g('LSVG'); if(!svg)return;
+  const styleEl=svg.querySelector('#SVG_STYLE'); if(!styleEl)return;
   const lines=styleEl.textContent.split('\n');
   const out=lines.map(line=>{
     const clsMatch=line.match(/^\s*\.(s\d+)\s*\{/);
-    if(!clsMatch || clsMatch[1]!==cls) return line;
+    if(!clsMatch||clsMatch[1]!==cls)return line;
     if(prop==='fill'){
       return line.replace(/(fill\s*:\s*)#[0-9a-fA-F]{3,8}/,'$1'+hex);
-    } else {
+    }else{
       return line.replace(/((?:^|[;{])\s*stroke\s*:\s*)#[0-9a-fA-F]{3,8}/,'$1'+hex);
     }
   });
   styleEl.textContent=out.join('\n');
 }
-function setSVGColor(cls, prop, hex){
-  setCSSProp(cls, prop, hex);
+
+function setSVGColor(cls,prop,hex){
+  setCSSProp(cls,prop,hex);
   const cEl=g('c_'+cls), hEl=g('h_'+cls);
-  if(cEl) cEl.value=hex;
-  if(hEl) hEl.value=hex.toUpperCase();
-  markDirty(); // ← nuevo
+  if(cEl)cEl.value=hex;
+  if(hEl)hEl.value=hex.toUpperCase();
+  markDirty(); // ← marca dirty solo si no estamos en applyConfig/reset
 }
-function hexInput(cls, prop, val){
-  let h=val.trim(); if(!h.startsWith('#')) h='#'+h;
-  if(/^#[0-9a-fA-F]{6}$/.test(h)) setSVGColor(cls,prop,h);
+
+function hexInput(cls,prop,val){
+  let h=val.trim(); if(!h.startsWith('#'))h='#'+h;
+  if(/^#[0-9a-fA-F]{6}$/.test(h))setSVGColor(cls,prop,h);
 }
+
 function setGold(base){
   g('h_gold').value=base.toUpperCase(); g('c_gold').value=base;
   const[c4,c8,c9]=calcGoldTones(base);
@@ -596,25 +825,24 @@ function setGold(base){
   setSVGColor('s8','fill',c8);
   setSVGColor('s9','fill',c9);
   g('gp4').style.background=c4; g('gp8').style.background=c8; g('gp9').style.background=c9;
-  // markDirty ya se llama dentro de setSVGColor
 }
 function hexInputGold(val){
-  let h=val.trim(); if(!h.startsWith('#')) h='#'+h;
-  if(/^#[0-9a-fA-F]{6}$/.test(h)) setGold(h);
+  let h=val.trim(); if(!h.startsWith('#'))h='#'+h;
+  if(/^#[0-9a-fA-F]{6}$/.test(h))setGold(h);
 }
 
 // ── FILTROS SVG ──────────────────────────────────────────────────
 function setup(){
-  const svg=g('LSVG'); if(!svg) return;
+  const svg=g('LSVG'); if(!svg)return;
   let defs=svg.querySelector('defs');
-  if(!defs){defs=document.createElementNS(NS,'defs');svg.insertBefore(defs,svg.firstChild);}
+  if(!defs){defs=document.createElementNS(NS,'defs'); svg.insertBefore(defs,svg.firstChild);}
   svg.querySelectorAll('[id^="TF-"],[id^="TC-"],[id^="TO-"]').forEach(e=>e.remove());
   svg.querySelectorAll('[id^="bg-"]').forEach(bgPath=>{
     const z=bgPath.id.replace('bg-','');
     const cid='TC-'+z;
     const cp=document.createElementNS(NS,'clipPath'); cp.id=cid;
     const cl=bgPath.cloneNode(true);
-    cl.removeAttribute('id');cl.removeAttribute('filter');cl.removeAttribute('style');cl.setAttribute('fill','white');
+    cl.removeAttribute('id'); cl.removeAttribute('filter'); cl.removeAttribute('style'); cl.setAttribute('fill','white');
     cp.appendChild(cl); defs.appendChild(cp);
     defs.appendChild(buildFiberFilter('TF-FIB-'+z));
     defs.appendChild(buildBurnFilter('TF-BRN-'+z));
@@ -622,8 +850,8 @@ function setup(){
     const mkRect=(sfx,fid,blend)=>{
       const r=document.createElementNS(NS,'rect');
       r.id='TO-'+sfx+'-'+z;
-      r.setAttribute('x','0');r.setAttribute('y','0');
-      r.setAttribute('width',String(VW));r.setAttribute('height',String(VH));
+      r.setAttribute('x','0'); r.setAttribute('y','0');
+      r.setAttribute('width',String(VW)); r.setAttribute('height',String(VH));
       r.setAttribute('fill','white');
       r.setAttribute('clip-path','url(#'+cid+')');
       r.setAttribute('filter','url(#'+fid+')');
@@ -638,6 +866,7 @@ function setup(){
     rBrn.parentNode.insertBefore(rEmb,rBrn.nextSibling);
   });
 }
+
 function buildFiberFilter(fid){
   const f=mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
   const ft1=mkEl('feTurbulence',{id:fid+'-ft1',type:NT,baseFrequency:'.65 .35',numOctaves:'4',seed:'3',result:'n1'});
@@ -651,8 +880,9 @@ function buildFiberFilter(fid){
   const st=mkEl('feColorMatrix',{id:fid+'-st',in:'gs',type:'matrix',
     values:`${(-sv0*.70).toFixed(3)} 0 0 0 1  ${(-sv0*.85).toFixed(3)} 0 0 0 1  ${(-sv0*.95).toFixed(3)} 0 0 0 1  0 0 0 0 1`,result:'sc'});
   const b=mkEl('feBlend',{in:'fc',in2:'sc',mode:'multiply'});
-  [ft1,gn1,fi,ft2,gn2,st,b].forEach(n=>f.appendChild(n));return f;
+  [ft1,gn1,fi,ft2,gn2,st,b].forEach(n=>f.appendChild(n)); return f;
 }
+
 function buildBurnFilter(fid){
   const f=mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
   const ft3=mkEl('feTurbulence',{id:fid+'-ft3',type:BT,baseFrequency:'.022 .011',numOctaves:'3',seed:'11',result:'n3'});
@@ -660,91 +890,91 @@ function buildBurnFilter(fid){
   const bv0=.25;
   const bn=mkEl('feColorMatrix',{id:fid+'-bn',in:'gb',type:'matrix',
     values:`${bv0} 0 0 0 0  ${(bv0*.97).toFixed(3)} 0 0 0 0  ${(bv0*.88).toFixed(3)} 0 0 0 0  0 0 0 0 1`});
-  [ft3,gn3,bn].forEach(n=>f.appendChild(n));return f;
+  [ft3,gn3,bn].forEach(n=>f.appendChild(n)); return f;
 }
+
 function buildEmbossFilter(fid){
   const f=mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
   const ft1=mkEl('feTurbulence',{id:fid+'-ft1',type:NT,baseFrequency:'.65 .35',numOctaves:'4',seed:'3',result:'n1'});
   const gn1=mkEl('feColorMatrix',{in:'n1',type:'saturate',values:'0',result:'gf'});
   const em=mkEl('feConvolveMatrix',{id:fid+'-em',in:'gf',order:'3',
     kernelMatrix:'-1 -1 0  -1 0 1  0 1 1',divisor:'4',bias:'.5',result:'emb'});
-  const ev0=.35;const half=(0.5*(1-ev0)).toFixed(3);
+  const ev0=.35; const half=(0.5*(1-ev0)).toFixed(3);
   const ea=mkEl('feColorMatrix',{id:fid+'-ea',in:'emb',type:'matrix',
     values:`${ev0} 0 0 0 ${half}  0 ${ev0} 0 0 ${half}  0 0 ${ev0} 0 ${half}  0 0 0 0 1`});
-  [ft1,gn1,em,ea].forEach(n=>f.appendChild(n));return f;
+  [ft1,gn1,em,ea].forEach(n=>f.appendChild(n)); return f;
 }
 
 // ── ACTUALIZAR FILTROS ───────────────────────────────────────────
 function upd(){
-  const svg=g('LSVG');if(!svg)return;
-  const fv=gv('fR'),fr=gv('frR'),sv=gv('sR'),sf=gv('sfR'),ev=gv('eR'),bv=gv('bR'),bf=gv('bfR'),sat=gv('satR');
-  g('fV').textContent=Math.round(fv*100)+'%';g('frV').textContent=fr.toFixed(2);
-  g('sV').textContent=Math.round(sv*100)+'%';g('sfV').textContent=sf.toFixed(3);
-  g('eV').textContent=Math.round(ev*100)+'%';g('bV').textContent=Math.round(bv*100)+'%';
-  g('bfV').textContent=bf.toFixed(3);g('satV').textContent=sat.toFixed(2);
+  const svg=g('LSVG'); if(!svg)return;
+  const fv=gv('fR'),fr=gv('frR'),sv=gv('sR'),sf=gv('sfR'),
+        ev=gv('eR'),bv=gv('bR'),bf=gv('bfR'),sat=gv('satR');
+  g('fV').textContent=Math.round(fv*100)+'%'; g('frV').textContent=fr.toFixed(2);
+  g('sV').textContent=Math.round(sv*100)+'%'; g('sfV').textContent=sf.toFixed(3);
+  g('eV').textContent=Math.round(ev*100)+'%'; g('bV').textContent=Math.round(bv*100)+'%';
+  g('bfV').textContent=bf.toFixed(3);         g('satV').textContent=sat.toFixed(2);
   svg.style.filter=`saturate(${sat.toFixed(2)})`;
   svg.querySelectorAll('[id^="bg-"]').forEach(bgPath=>{
     const z=bgPath.id.replace('bg-','');
     const ffid='TF-FIB-'+z;
-    const fft1=svg.querySelector('#'+ffid+'-ft1'),ffi=svg.querySelector('#'+ffid+'-fi');
-    const fft2=svg.querySelector('#'+ffid+'-ft2'),fst=svg.querySelector('#'+ffid+'-st');
-    if(fft1){fft1.setAttribute('type',NT);fft1.setAttribute('baseFrequency',`${fr.toFixed(3)} ${(fr*.54).toFixed(3)}`);}
-    if(ffi) ffi.setAttribute('values',`${(-fv*.9).toFixed(3)} 0 0 0 1  ${(-fv).toFixed(3)} 0 0 0 1  ${(-fv*1.1).toFixed(3)} 0 0 0 1  0 0 0 0 1`);
-    if(fft2)fft2.setAttribute('baseFrequency',`${sf.toFixed(4)} ${(sf*.5).toFixed(4)}`);
-    if(fst) fst.setAttribute('values',`${(-sv*.70).toFixed(3)} 0 0 0 1  ${(-sv*.85).toFixed(3)} 0 0 0 1  ${(-sv*.95).toFixed(3)} 0 0 0 1  0 0 0 0 1`);
+    const fft1=svg.querySelector('#'+ffid+'-ft1'), ffi=svg.querySelector('#'+ffid+'-fi');
+    const fft2=svg.querySelector('#'+ffid+'-ft2'), fst=svg.querySelector('#'+ffid+'-st');
+    if(fft1){fft1.setAttribute('type',NT); fft1.setAttribute('baseFrequency',`${fr.toFixed(3)} ${(fr*.54).toFixed(3)}`);}
+    if(ffi)  ffi.setAttribute('values',`${(-fv*.9).toFixed(3)} 0 0 0 1  ${(-fv).toFixed(3)} 0 0 0 1  ${(-fv*1.1).toFixed(3)} 0 0 0 1  0 0 0 0 1`);
+    if(fft2) fft2.setAttribute('baseFrequency',`${sf.toFixed(4)} ${(sf*.5).toFixed(4)}`);
+    if(fst)  fst.setAttribute('values',`${(-sv*.70).toFixed(3)} 0 0 0 1  ${(-sv*.85).toFixed(3)} 0 0 0 1  ${(-sv*.95).toFixed(3)} 0 0 0 1  0 0 0 0 1`);
     const bfid='TF-BRN-'+z;
-    const bft3=svg.querySelector('#'+bfid+'-ft3'),bbn=svg.querySelector('#'+bfid+'-bn');
-    if(bft3){bft3.setAttribute('type',BT);bft3.setAttribute('baseFrequency',`${bf.toFixed(4)} ${(bf*.5).toFixed(4)}`);}
-    if(bbn) bbn.setAttribute('values',`${bv.toFixed(3)} 0 0 0 0  ${(bv*.97).toFixed(3)} 0 0 0 0  ${(bv*.88).toFixed(3)} 0 0 0 0  0 0 0 0 1`);
+    const bft3=svg.querySelector('#'+bfid+'-ft3'), bbn=svg.querySelector('#'+bfid+'-bn');
+    if(bft3){bft3.setAttribute('type',BT); bft3.setAttribute('baseFrequency',`${bf.toFixed(4)} ${(bf*.5).toFixed(4)}`);}
+    if(bbn)  bbn.setAttribute('values',`${bv.toFixed(3)} 0 0 0 0  ${(bv*.97).toFixed(3)} 0 0 0 0  ${(bv*.88).toFixed(3)} 0 0 0 0  0 0 0 0 1`);
     const efid='TF-EMB-'+z;
-    const eft1=svg.querySelector('#'+efid+'-ft1'),eea=svg.querySelector('#'+efid+'-ea');
+    const eft1=svg.querySelector('#'+efid+'-ft1'), eea=svg.querySelector('#'+efid+'-ea');
     const embRect=svg.querySelector('#TO-EMB-'+z);
-    if(eft1){eft1.setAttribute('type',NT);eft1.setAttribute('baseFrequency',`${fr.toFixed(3)} ${(fr*.54).toFixed(3)}`);}
-    if(eea){const half=(0.5*(1-ev)).toFixed(3);eea.setAttribute('values',`${ev.toFixed(3)} 0 0 0 ${half}  0 ${ev.toFixed(3)} 0 0 ${half}  0 0 ${ev.toFixed(3)} 0 ${half}  0 0 0 0 1`);}
+    if(eft1){eft1.setAttribute('type',NT); eft1.setAttribute('baseFrequency',`${fr.toFixed(3)} ${(fr*.54).toFixed(3)}`);}
+    if(eea){const half=(0.5*(1-ev)).toFixed(3); eea.setAttribute('values',`${ev.toFixed(3)} 0 0 0 ${half}  0 ${ev.toFixed(3)} 0 0 ${half}  0 0 ${ev.toFixed(3)} 0 ${half}  0 0 0 0 1`);}
     if(embRect)embRect.setAttribute('style',`mix-blend-mode:${EM};pointer-events:none`);
   });
-  markDirty(); // ← nuevo
+  markDirty(); // ← solo marca si no estamos en applyConfig/reset
 }
 
-function setNT(v,btn){NT=v;document.querySelectorAll('#nt1,#nt2').forEach(b=>b.classList.remove('on'));btn.classList.add('on');upd();}
-function setEM(v,btn){EM=v;document.querySelectorAll('#eb1,#eb2,#eb3').forEach(b=>b.classList.remove('on'));btn.classList.add('on');upd();}
-function setBT(v,btn){BT=v;document.querySelectorAll('#bt1,#bt2').forEach(b=>b.classList.remove('on'));btn.classList.add('on');upd();}
+function setNT(v,btn){NT=v; document.querySelectorAll('#nt1,#nt2').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); upd();}
+function setEM(v,btn){EM=v; document.querySelectorAll('#eb1,#eb2,#eb3').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); upd();}
+function setBT(v,btn){BT=v; document.querySelectorAll('#bt1,#bt2').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); upd();}
 
 function applyP(name){
   const p=presets[name];
-  g('fR').value=p.f;g('frR').value=p.fr;g('sR').value=p.s;g('sfR').value=p.sf;
-  g('eR').value=p.e;g('bR').value=p.b;g('bfR').value=p.bf;g('satR').value=p.sat;
-  NT=p.nt;EM=p.em;BT=p.bt;
-  g('nt1').classList.toggle('on',p.nt==='fractalNoise');g('nt2').classList.toggle('on',p.nt==='turbulence');
-  g('eb1').classList.toggle('on',p.em==='overlay');g('eb2').classList.toggle('on',p.em==='soft-light');g('eb3').classList.toggle('on',p.em==='hard-light');
-  g('bt1').classList.toggle('on',p.bt==='fractalNoise');g('bt2').classList.toggle('on',p.bt==='turbulence');
-  upd();
+  g('fR').value=p.f;   g('frR').value=p.fr; g('sR').value=p.s;   g('sfR').value=p.sf;
+  g('eR').value=p.e;   g('bR').value=p.b;   g('bfR').value=p.bf; g('satR').value=p.sat;
+  NT=p.nt; EM=p.em; BT=p.bt;
+  g('nt1').classList.toggle('on',p.nt==='fractalNoise'); g('nt2').classList.toggle('on',p.nt==='turbulence');
+  g('eb1').classList.toggle('on',p.em==='overlay'); g('eb2').classList.toggle('on',p.em==='soft-light'); g('eb3').classList.toggle('on',p.em==='hard-light');
+  g('bt1').classList.toggle('on',p.bt==='fractalNoise'); g('bt2').classList.toggle('on',p.bt==='turbulence');
+  upd(); // upd llama markDirty — correcto: los presets deben marcarse como no guardados
 }
 
 // ── EXPORTAR SVG ─────────────────────────────────────────────────
 function exportSVG(){
-  const svg=g('LSVG');if(!svg)return;
-  const prevF=svg.style.filter;svg.style.filter='';
+  const svg=g('LSVG'); if(!svg)return;
+  const prevF=svg.style.filter; svg.style.filter='';
   const blob=new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'});
   svg.style.filter=prevF;
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='etiqueta.svg';a.click();
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='etiqueta.svg'; a.click();
 }
 
 // ── INFO DE DIMENSIONES PNG ──────────────────────────────────────
 function updPngInfo(){
   const pct=parseInt(g('pngScaleR').value);
-  const w=Math.round(VW*pct/100);
-  const h=Math.round(VH*pct/100);
+  const w=Math.round(VW*pct/100), h=Math.round(VH*pct/100);
   g('pngScaleV').textContent=pct+'%';
   g('pngPxInfo').textContent=w+' x '+h+' px';
 }
 
 // ── EXPORTAR PNG ─────────────────────────────────────────────────
 function exportPNG(){
-  const svg=g('LSVG'); if(!svg) return;
+  const svg=g('LSVG'); if(!svg)return;
   const pct=parseInt(g('pngScaleR').value);
-  const w=Math.round(VW*pct/100);
-  const h=Math.round(VH*pct/100);
+  const w=Math.round(VW*pct/100), h=Math.round(VH*pct/100);
   const prevF=svg.style.filter; svg.style.filter='';
   const svgStr=new XMLSerializer().serializeToString(svg);
   svg.style.filter=prevF;
@@ -771,7 +1001,7 @@ function exportPNG(){
         a.href=URL.createObjectURL(pngBlob);
         a.click();
         fill.style.width='100%';
-        setTimeout(function(){bar.classList.remove('show');fill.style.width='0%';},600);
+        setTimeout(function(){bar.classList.remove('show'); fill.style.width='0%';},600);
       },'image/png');
     },50);
   };
@@ -783,188 +1013,10 @@ function exportPNG(){
   img.src=url;
 }
 
-// ── FUNCIONES DE MEMORIA ─────────────────────────────────────────
-
-/** Captura el estado actual de todos los controles. */
-function getCurrentConfig(){
-  return{
-    s5 : g('c_s5').value,
-    s0 : g('c_s0').value,
-    s2 : g('c_s2').value,
-    s3 : g('c_s3').value,
-    gold: g('c_gold').value,
-    s1 : g('c_s1').value,
-    s7 : g('c_s7').value,
-    fR  : gv('fR'),  frR: gv('frR'),
-    sR  : gv('sR'),  sfR: gv('sfR'),
-    eR  : gv('eR'),  bR : gv('bR'),  bfR: gv('bfR'),
-    satR: gv('satR'),
-    nt: NT, em: EM, bt: BT
-  };
-}
-
-/** Aplica un objeto de config a la UI sin marcar dirty. */
-function applyConfigToUI(cfg){
-  _suppressDirty=true;
-  try{
-    setSVGColor('s5','fill', cfg.s5);
-    setSVGColor('s0','fill', cfg.s0);
-    setCSSProp('s11','stroke', cfg.s0);   // igual que el oninput original
-    setSVGColor('s2','fill', cfg.s2);
-    setSVGColor('s3','fill', cfg.s3);
-    setGold(cfg.gold);
-    setSVGColor('s1','fill', cfg.s1);
-    setSVGColor('s7','fill', cfg.s7);
-    g('fR').value=cfg.fR;   g('frR').value=cfg.frR;
-    g('sR').value=cfg.sR;   g('sfR').value=cfg.sfR;
-    g('eR').value=cfg.eR;   g('bR').value=cfg.bR;
-    g('bfR').value=cfg.bfR; g('satR').value=cfg.satR;
-    NT=cfg.nt; EM=cfg.em; BT=cfg.bt;
-    g('nt1').classList.toggle('on', NT==='fractalNoise');
-    g('nt2').classList.toggle('on', NT==='turbulence');
-    g('eb1').classList.toggle('on', EM==='overlay');
-    g('eb2').classList.toggle('on', EM==='soft-light');
-    g('eb3').classList.toggle('on', EM==='hard-light');
-    g('bt1').classList.toggle('on', BT==='fractalNoise');
-    g('bt2').classList.toggle('on', BT==='turbulence');
-    upd();
-  } finally {
-    _suppressDirty=false;
-  }
-}
-
-/** Muestra el indicador de cambios sin guardar. */
-function markDirty(){
-  if(_suppressDirty || _isDirty) return;
-  _isDirty=true;
-  const badge=g('unsaved-badge');
-  if(badge) badge.style.display='inline-flex';
-  const btn=g('save-btn');
-  if(btn) btn.classList.add('dirty');
-}
-
-/** Oculta el indicador de cambios sin guardar. */
-function markClean(){
-  _isDirty=false;
-  const badge=g('unsaved-badge');
-  if(badge) badge.style.display='none';
-  const btn=g('save-btn');
-  if(btn) btn.classList.remove('dirty');
-}
-
-/** Guarda la configuración actual en localStorage. */
-function saveConfig(){
-  try{
-    const cfg=getCurrentConfig();
-    localStorage.setItem(LS_SAVED, JSON.stringify(cfg));
-    localStorage.removeItem(LS_PENDING);
-    savedConfig=cfg;
-    markClean();
-    // Feedback visual breve en el botón
-    const btn=g('save-btn');
-    const orig=btn.textContent;
-    btn.textContent='✓ ¡Guardado!';
-    setTimeout(()=>{ btn.textContent=orig; }, 1500);
-  } catch(e){
-    alert('No se pudo guardar: '+e.message);
-  }
-}
-
-/**
- * Copia al portapapeles una URL con la configuración ACTUAL codificada,
- * aunque no esté guardada en localStorage.
- */
-function copyConfigURL(){
-  const cfg=getCurrentConfig();
-  const encoded=btoa(JSON.stringify(cfg));          // solo ASCII, btoa es suficiente
-  const url=location.origin+location.pathname+'?c='+encodeURIComponent(encoded);
-  const btn=g('copy-url-btn');
-  const orig=btn.textContent;
-  const ok=()=>{ btn.textContent='✓ URL copiada!'; setTimeout(()=>{ btn.textContent=orig; }, 2000); };
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(url).then(ok).catch(()=>{ prompt('Copia esta URL:',url); });
-  } else {
-    prompt('Copia esta URL:',url); ok();
-  }
-}
-
-/**
- * Lógica de arranque para la memoria:
- *
- *  1. Si hay ?c= en la URL → decodifica y limpia la URL inmediatamente.
- *     a. Sin localStorage guardado → la guarda como config principal.
- *     b. Con localStorage guardado → la guarda como config PENDIENTE
- *        (no sobreescribe la guardada).
- *
- *  2. Si hay config pendiente → la aplica (marca dirty porque difiere de la guardada).
- *  3. Si hay config guardada → la aplica (estado limpio).
- *  4. Si no hay nada → usa los defaults ya aplicados (estado limpio).
- */
-function initMemory(){
-  const params=new URLSearchParams(location.search);
-  const urlRaw=params.get('c');
-
-  if(urlRaw){
-    // Limpia la URL antes de hacer cualquier otra cosa (funciona en GitHub Pages)
-    history.replaceState({}, '', location.pathname);
-
-    let urlCfg=null;
-    try{ urlCfg=JSON.parse(atob(decodeURIComponent(urlRaw))); }
-    catch(e){ console.warn('[Editor] Config de URL inválida:', e); }
-
-    if(urlCfg){
-      const hasSaved=localStorage.getItem(LS_SAVED);
-      if(!hasSaved){
-        // Sin config previa → la URL se convierte en la config guardada
-        localStorage.setItem(LS_SAVED, JSON.stringify(urlCfg));
-        savedConfig=urlCfg;
-        applyConfigToUI(urlCfg);
-        markClean();
-        return;
-      } else {
-        // Ya había config → guardamos la URL como pendiente (sin sobreescribir)
-        localStorage.setItem(LS_PENDING, JSON.stringify(urlCfg));
-      }
-    }
-  }
-
-  // Revisar si hay config pendiente (URL recibida con config previa guardada)
-  const pendingStr=localStorage.getItem(LS_PENDING);
-  if(pendingStr){
-    localStorage.removeItem(LS_PENDING);  // se consume una sola vez
-    try{
-      const cfg=JSON.parse(pendingStr);
-      const savedStr=localStorage.getItem(LS_SAVED);
-      savedConfig=savedStr ? JSON.parse(savedStr) : null;
-      applyConfigToUI(cfg);
-      // Esta config viene de una URL externa; difiere de la guardada → dirty
-      _suppressDirty=false;
-      markDirty();
-      return;
-    } catch(e){}
-  }
-
-  // Cargar config guardada normalmente
-  const savedStr=localStorage.getItem(LS_SAVED);
-  if(savedStr){
-    try{
-      const cfg=JSON.parse(savedStr);
-      savedConfig=cfg;
-      applyConfigToUI(cfg);
-      markClean();
-    } catch(e){}
-  }
-  // Si no hay nada, los defaults (applyP('aged')) ya están aplicados → estado limpio
-}
-
 // ── ARRANQUE ─────────────────────────────────────────────────────
 initSVG();
 setup();
-_suppressDirty=true;  // evita marcar dirty durante la carga inicial
-applyP('aged');       // defaults
-_suppressDirty=false;
-markClean();          // asegura estado limpio antes de leer memoria
-initMemory();         // sobreescribe con lo guardado/URL si existe
+initWithPersistence(); // reemplaza applyP('aged') — maneja URL, LS y defaults
 </script>
 </body>
 </html>
