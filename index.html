@@ -208,6 +208,10 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
 </div><!-- /lay -->
 
 <script>
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
 const NS='http://www.w3.org/2000/svg';
 let NT='fractalNoise', EM='overlay', BT='fractalNoise';
 let VW=3120, VH=2100;
@@ -799,6 +803,13 @@ function exportPNG(){
   await initSVG();
   setup();
   initWithPersistence();
+
+  requestAnimationFrame(() => {
+    if (_savedCfg) {
+      applyConfig(_savedCfg);
+    }
+  });
+
 })();
 </script>
 </body>
