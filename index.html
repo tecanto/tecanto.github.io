@@ -513,18 +513,19 @@ async function loadAllSVGs() {
   // Determinar lista de SVGs desde meta
   let svgList;
   if (meta?.svgs && Object.keys(meta.svgs).length) {
-    // Nuevo formato: meta.svgs = { "archivo.svg": { fused_colors, filter } }
+    // Nuevo formato: meta.svgs = { "archivo.svg": { fused_colors, filter, colors? } }
     svgList=Object.entries(meta.svgs).map(([name,cfg])=>({
       name,
-      fusedColors: cfg.fused_colors||[],
-      filterPreset: cfg.filter||'clean'
+      fusedColors:  cfg.fused_colors||[],
+      filterPreset: cfg.filter||'clean',
+      colorMeta:    cfg.colors||null   // colores propios del SVG (sobreescribe el global)
     }));
   } else {
     // Retrocompatibilidad: formato antiguo (fused_colors y filter en la raíz)
     svgList=[{ name:'ETIQUETA.svg', fusedColors:meta?.fused_colors||[], filterPreset:meta?.filter||'clean' }];
   }
 
-  for (const {name,fusedColors,filterPreset} of svgList) {
+  for (const {name,fusedColors,filterPreset,colorMeta} of svgList) {
     try {
       const res=await fetch('./'+name);
       if (!res.ok){ console.warn(`No se pudo cargar ${name}`); continue; }
@@ -547,8 +548,8 @@ async function loadAllSVGs() {
       const vb=svgEl.getAttribute('viewBox');
       if (vb){ const p=vb.trim().split(/[\s,]+/); svgVW=parseFloat(p[2]); svgVH=parseFloat(p[3]); }
 
-      // Construir grupos de color
-      const colorGroups=buildColorGroups(svgColors,{fused_colors:fusedColors},meta?.colors);
+      // Construir grupos de color — usa colores del SVG primero, luego el global
+      const colorGroups=buildColorGroups(svgColors,{fused_colors:fusedColors},colorMeta||meta?.colors);
 
       const state={ name, el:svgEl, svgColors, colorGroups, VW:svgVW, VH:svgVH, filterPreset, filterState:null };
       svgStates.push(state);

@@ -5,23 +5,29 @@
       "fused_colors": [
         ["s0", "s10"],
         ["s4", "s6", "s8", "s11", "s9"]
-      ]
+      ],
+      "colors": {
+        "s0": { "name": "Fondo central" },
+        "s1": { "name": "Negro" },
+        "s2": { "name": "Logo" },
+        "s3": { "name": "Rojo" },
+        "s4": { "name": "Texto dorado" },
+        "s5": { "name": "Fondo principal" },
+        "s7": { "name": "Blanco" }
+      }
     },
     "etiqueta-gourmet.svg": {
       "filter": "clean",
       "fused_colors": [
         ["s4", "s3", "s5", "s1"]
-      ]
+      ],
+      "colors": {
+        "s0": { "name": "Fondo principal" },
+        "s2": { "name": "Fondo central" },
+        "s4": { "name": "Texto dorado" },
+        "s7": { "name": "Blanco" },
+        "s9": { "name": "Logo" }
+      }
     }
-  },
-  "colors": {
-    "s0": { "name": "Fondo central" },
-    "s1": { "name": "Negro" },
-    "s2": { "name": "Logo" },
-    "s3": { "name": "Rojo" },
-    "s4": { "name": "Texto dorado" },
-    "s5": { "name": "Fondo principal" },
-    "s7": { "name": "Blanco" },
-    "s9": { "name": "Logo" }
   }
 }
