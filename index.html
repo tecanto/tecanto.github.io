@@ -16,15 +16,19 @@ body{background:var(--bg0);color:var(--t1);font-family:-apple-system,BlinkMacSys
 .topbar{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--bdrL);flex-wrap:wrap;row-gap:6px}
 .topbar h1{font-size:13px;font-weight:600;color:var(--t2);letter-spacing:.05em;text-transform:uppercase}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--acc);flex-shrink:0}
-
-/* ── INDICADOR DIRTY ── */
 .dirty-bar{display:none;align-items:center;gap:5px;font-size:11px;color:#e8907a;padding:3px 11px;border-radius:20px;border:1px solid rgba(200,80,50,.35);background:rgba(99,32,20,.22);margin-left:auto;flex-shrink:0;white-space:nowrap}
 .dirty-dot{width:5px;height:5px;border-radius:50%;background:#e8907a;flex-shrink:0}
+
+/* ── TABS ───────────────────────────────────────────────────────── */
+.tab-bar{display:flex;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+.tab-btn{font-size:12px;font-family:inherit;padding:5px 14px;border-radius:6px;cursor:pointer;border:1px solid var(--bdr);background:var(--bg2);color:var(--t2);transition:background .12s,color .12s,border-color .12s}
+.tab-btn:hover{color:var(--t1);background:var(--bg3)}
+.tab-btn.active{background:var(--bg3);color:var(--t1);border-color:var(--t3)}
 
 .lay{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
 .pcol{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:10px;position:sticky;top:20px}
 .ccol{flex:1;min-width:260px}
-.swrap{width:540px;height:364px;border-radius:12px;border:1px solid var(--bdr);background:#090a0b;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 12px 40px rgba(0,0,0,.6)}
+.swrap{width:540px;border-radius:12px;border:1px solid var(--bdr);background:#090a0b;overflow:hidden;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,.04) inset,0 12px 40px rgba(0,0,0,.6)}
 .swrap svg{width:100%;height:100%;display:block}
 .cg{border:1px solid var(--bdrL);border-radius:10px;padding:11px 13px;margin-bottom:8px;background:var(--bg2)}
 .cg h3{font-size:9.5px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
@@ -40,9 +44,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;heigh
 .bb.on{background:var(--acc);color:var(--acc-lt);border-color:var(--acc)}
 .clr{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .clr:last-child{margin-bottom:0}
-.cll{font-size:12px;color:var(--t2);min-width:110px}
+.cll{font-size:12px;color:var(--t2);min-width:110px;flex-shrink:0}
 .csw{display:flex;align-items:center;gap:8px;flex:1}
-input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(--bdr);padding:2px;cursor:pointer;background:none}
+input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(--bdr);padding:2px;cursor:pointer;background:none;flex-shrink:0}
 .hx{font-size:12px;font-family:var(--mono);border:1px solid var(--bdrL);border-radius:6px;padding:5px 8px;width:84px;background:var(--bg3);color:var(--t1);text-transform:uppercase}
 .hx:focus{outline:none;border-color:var(--bdr)}
 .dv{height:1px;background:var(--bdrL);margin:11px 0}
@@ -52,17 +56,24 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
 .eb.primary:hover{background:#7a2819}
 .pl{font-size:10px;color:var(--t3)}
 .cg.pcard{background:var(--bg1)}
-.gold-preview{display:flex;gap:5px;margin-top:8px;align-items:center}
-.gold-swatch{height:14px;border-radius:3px;flex:1;border:1px solid rgba(255,255,255,.1)}
-.gold-lbl{font-size:10px;color:var(--t3);min-width:28px;text-align:center;font-family:var(--mono)}
 .px-info{font-size:10px;color:var(--t3);text-align:center;font-family:var(--mono);margin-top:2px}
 .progress-bar{width:100%;height:3px;background:var(--bg4);border-radius:2px;overflow:hidden;margin-top:6px;display:none}
 .progress-bar.show{display:block}
 .progress-fill{height:100%;background:var(--acc-lt);width:0%;transition:width .2s;border-radius:2px}
-
-/* ── BARRA DE PERSISTENCIA ── */
 .persist-row{display:flex;gap:5px;flex-wrap:wrap}
 .persist-row .eb{flex:1;min-width:80px;margin-top:0;padding:7px 10px;white-space:nowrap}
+
+/* ── IDs hint ───────────────────────────────────────────────────── */
+.clr-ids{
+  font-size:10px;color:var(--t3);
+  padding-left:119px;display:block;
+  margin-top:-6px;margin-bottom:9px;
+  font-family:var(--mono);letter-spacing:.03em;
+}
+/* Delta peers shown in a slightly different tone */
+.clr-ids-delta{color:var(--acc-lt);opacity:.65}
+
+.clr-loading{font-size:12px;color:var(--t3);padding:4px 0}
 </style>
 </head>
 <body autocomplete="off">
@@ -73,8 +84,12 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
   <div id="dirtyBar" class="dirty-bar"><span class="dirty-dot"></span>Cambios sin guardar</div>
 </div>
 
+<!-- Tab bar — visible only when hay múltiples SVGs -->
+<div id="tabBar" class="tab-bar" style="display:none"></div>
+
 <div class="lay">
-  <!-- ── COLUMNA IZQUIERDA (preview + exportar) ── -->
+
+  <!-- ── COLUMNA IZQUIERDA ── -->
   <div class="pcol">
     <div class="swrap" id="SW"></div>
     <p class="pl">Vista previa en vivo</p>
@@ -84,66 +99,32 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
       <div class="cr">
         <span class="cl">Escala</span>
         <input type="range" min="5" max="200" step="5" value="100" id="pngScaleR" oninput="updPngInfo()"/>
-        <span class="cv" id="pngScaleV">25%</span>
+        <span class="cv" id="pngScaleV">100%</span>
       </div>
-      <p class="px-info" id="pngPxInfo">780 x 525 px</p>
+      <p class="px-info" id="pngPxInfo">— x — px</p>
       <div class="progress-bar" id="pngProgress"><div class="progress-fill" id="pngFill"></div></div>
       <button class="eb primary" style="margin-top:8px" onclick="exportPNG()">&#8595; Descargar PNG</button>
     </div>
   </div>
 
-  <!-- ── COLUMNA DERECHA (controles) ── -->
+  <!-- ── COLUMNA DERECHA ── -->
   <div class="ccol">
 
     <!-- PERSISTENCIA -->
     <div class="cg">
       <h3>Guardar configuración</h3>
       <div class="persist-row">
-        <button class="eb" id="saveBtn" onclick="saveConfig()">Guardar</button>
+        <button class="eb" id="saveBtn"    onclick="saveConfig()">Guardar</button>
         <button class="eb" id="copyURLBtn" onclick="copyConfigURL()">Copiar URL</button>
-        <button class="eb" onclick="resetConfig()">Restablecer</button>
+        <button class="eb"                 onclick="resetConfig()">Restablecer</button>
       </div>
     </div>
 
-    <!-- COLORES -->
+    <!-- COLORES — generado dinámicamente -->
     <div class="cg">
       <h3>Colores del SVG</h3>
-      <div class="clr"><span class="cll">Fondo lateral (.s5)</span>
-        <div class="csw"><input type="color" autocomplete="off" id="c_s5" value="#632014" oninput="setSVGColor('s5','fill',this.value)"/>
-        <input type="text" class="hx" id="h_s5" value="#632014" onchange="hexInput('s5','fill',this.value)" maxlength="7"/></div>
-      </div>
-      <div class="clr"><span class="cll">Fondo central (.s0)</span>
-        <div class="csw"><input type="color" autocomplete="off" id="c_s0" value="#f0dccf"
-          oninput="setSVGColor('s0','fill',this.value);setCSSProp('s11','stroke',this.value)"/>
-        <input type="text" class="hx" id="h_s0" value="#f0dccf" onchange="hexInput('s0','fill',this.value)" maxlength="7"/></div>
-      </div>
-      <div class="dv"></div>
-      <div class="clr"><span class="cll">Logo (.s2)</span>
-        <div class="csw"><input type="color" autocomplete="off" id="c_s2" value="#86190c" oninput="setSVGColor('s2','fill',this.value)"/>
-        <input type="text" class="hx" id="h_s2" value="#86190c" onchange="hexInput('s2','fill',this.value)" maxlength="7"/></div>
-      </div>
-      <div class="clr"><span class="cll">Rojo (.s3)</span>
-        <div class="csw"><input type="color" autocomplete="off" id="c_s3" value="#c01113" oninput="setSVGColor('s3','fill',this.value)"/>
-        <input type="text" class="hx" id="h_s3" value="#c01113" onchange="hexInput('s3','fill',this.value)" maxlength="7"/></div>
-      </div>
-      <div class="dv"></div>
-      <div class="clr"><span class="cll">Dorado base</span>
-        <div class="csw"><input type="color" autocomplete="off" id="c_gold" value="#964b05" oninput="setGold(this.value)"/>
-        <input type="text" class="hx" id="h_gold" value="#964b05" onchange="hexInputGold(this.value)" maxlength="7"/></div>
-      </div>
-      <div class="gold-preview">
-        <span class="gold-lbl">.s4</span><div class="gold-swatch" id="gp4" style="background:#964b05"></div>
-        <span class="gold-lbl">.s8</span><div class="gold-swatch" id="gp8" style="background:#a6580f"></div>
-        <span class="gold-lbl">.s9</span><div class="gold-swatch" id="gp9" style="background:#bc6b16"></div>
-      </div>
-      <div class="dv"></div>
-      <div class="clr"><span class="cll">Oscuro (.s1)</span>
-        <div class="csw"><input type="color" autocomplete="off" id="c_s1" value="#2a2a2a" oninput="setSVGColor('s1','fill',this.value)"/>
-        <input type="text" class="hx" id="h_s1" value="#2a2a2a" onchange="hexInput('s1','fill',this.value)" maxlength="7"/></div>
-      </div>
-      <div class="clr"><span class="cll">Claro (.s7)</span>
-        <div class="csw"><input type="color" autocomplete="off" id="c_s7" value="#e9e9e9" oninput="setSVGColor('s7','fill',this.value)"/>
-        <input type="text" class="hx" id="h_s7" value="#e9e9e9" onchange="hexInput('s7','fill',this.value)" maxlength="7"/></div>
+      <div id="colorControlsContainer">
+        <p class="clr-loading">Cargando…</p>
       </div>
     </div>
 
@@ -154,7 +135,7 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
       <div class="cr"><span class="cl">Escala</span><input type="range" min=".3" max="1.5" step=".05" value=".65" id="frR" oninput="upd()"/><span class="cv" id="frV">0.65</span></div>
       <div class="cr"><span class="cl">Tipo</span><div class="br">
         <button class="bb on" id="nt1" onclick="setNT('fractalNoise',this)">Fibra suave</button>
-        <button class="bb" id="nt2" onclick="setNT('turbulence',this)">Ruido rugoso</button>
+        <button class="bb"    id="nt2" onclick="setNT('turbulence',this)">Ruido rugoso</button>
       </div></div>
     </div>
 
@@ -171,8 +152,8 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
       <div class="cr"><span class="cl">Intensidad</span><input type="range" min="0" max="1" step=".02" value=".35" id="eR" oninput="upd()"/><span class="cv" id="eV">35%</span></div>
       <div class="cr"><span class="cl">Modo blend</span><div class="br">
         <button class="bb on" id="eb1" onclick="setEM('overlay',this)">Overlay</button>
-        <button class="bb" id="eb2" onclick="setEM('soft-light',this)">Soft light</button>
-        <button class="bb" id="eb3" onclick="setEM('hard-light',this)">Hard light</button>
+        <button class="bb"    id="eb2" onclick="setEM('soft-light',this)">Soft light</button>
+        <button class="bb"    id="eb3" onclick="setEM('hard-light',this)">Hard light</button>
       </div></div>
     </div>
 
@@ -183,7 +164,7 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
       <div class="cr"><span class="cl">Escala patron</span><input type="range" min=".005" max=".08" step=".002" value=".022" id="bfR" oninput="upd()"/><span class="cv" id="bfV">0.022</span></div>
       <div class="cr"><span class="cl">Forma</span><div class="br">
         <button class="bb on" id="bt1" onclick="setBT('fractalNoise',this)">Organico</button>
-        <button class="bb" id="bt2" onclick="setBT('turbulence',this)">Nitido</button>
+        <button class="bb"    id="bt2" onclick="setBT('turbulence',this)">Nitido</button>
       </div></div>
     </div>
 
@@ -208,385 +189,593 @@ input[type=color]{width:30px;height:30px;border-radius:7px;border:1px solid var(
 </div><!-- /lay -->
 
 <script>
-if ('scrollRestoration' in history) {
-  history.scrollRestoration = 'manual';
-}
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
-const NS='http://www.w3.org/2000/svg';
-let NT='fractalNoise', EM='overlay', BT='fractalNoise';
-let VW=3120, VH=2100;
+const NS = 'http://www.w3.org/2000/svg';
+let NT = 'fractalNoise', EM = 'overlay', BT = 'fractalNoise';
+let VW = 3120, VH = 2100;
 
-// ── PEGAR AQUI EL SVG COMPLETO ──────────────────────────────────
-let SVG_SRC = ``;
+// ── ESTADO MULTI-SVG ─────────────────────────────────────────────
+//
+// svgStates : array de { name, el, svgColors, colorGroups, VW, VH,
+//                        filterPreset, filterState }
+//
+// colorGroups: [{ baseId, baseSameIds, fusedPeers, name, idx, color }]
+//   baseId      : ID representativo del grupo (primary)
+//   baseSameIds : IDs con exactamente el mismo color que baseId (auto-detectados)
+//   fusedPeers  : [{ peerId, sameIds, origColor }] — colores distintos
+//                 controlados con offset HSL relativo al base
+//   color       : color actual del baseId (lo que muestra el picker)
 
-const presets={
+let svgStates   = [];
+let activeIdx   = 0;
+let meta        = null;
+let _isDirty    = false;
+let _suppressDirty = false;
+
+// ── PRESETS ──────────────────────────────────────────────────────
+const presets = {
   clean:  {f:0,   fr:.65, s:0,   sf:.018, e:0,   b:0,   bf:.022, sat:1,   nt:'fractalNoise', em:'overlay',    bt:'fractalNoise'},
   aged:   {f:.25, fr:.65, s:.12, sf:.018, e:.35, b:.25, bf:.022, sat:.82, nt:'fractalNoise', em:'overlay',    bt:'fractalNoise'},
   worn:   {f:.45, fr:.8,  s:.28, sf:.025, e:.55, b:.45, bf:.035, sat:.65, nt:'fractalNoise', em:'soft-light', bt:'turbulence'},
   antique:{f:.65, fr:.55, s:.45, sf:.012, e:.70, b:.65, bf:.015, sat:.45, nt:'turbulence',   em:'overlay',    bt:'fractalNoise'}
 };
 
-function g(id){return document.getElementById(id)}
-function gv(id){return parseFloat(g(id).value)}
-function mkEl(tag,attrs){
-  const e=document.createElementNS(NS,tag);
-  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+// ── HELPERS ──────────────────────────────────────────────────────
+const g  = id => document.getElementById(id);
+const gv = id => parseFloat(g(id).value);
+function mkEl(tag, attrs) {
+  const e = document.createElementNS(NS, tag);
+  Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,v));
   return e;
 }
 
-let currentConfig = null;
-// ════════════════════════════════════════════════════════════════
-// ── PERSISTENCIA ────────────────────────────────────────────────
-// ════════════════════════════════════════════════════════════════
+function normalizeHex(hex) {
+  if (!hex) return '#000000';
+  hex = hex.trim().toLowerCase();
+  if (!hex.startsWith('#')) hex = '#' + hex;
+  if (/^#[0-9a-f]{3}$/.test(hex))
+    hex = '#' + hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
+  return hex;
+}
 
-const LS_KEY = 'svgEditor_v1';
-let _savedCfg    = null;   // lo que está en localStorage
-let _isDirty     = false;  // hay cambios sin guardar
-let _suppressDirty = false; // bloquear markDirty durante applyConfig / reset
+// ── CONVERSIÓN HSL ───────────────────────────────────────────────
+function hexToHSL(hex) {
+  hex = normalizeHex(hex);
+  let r=parseInt(hex.slice(1,3),16)/255,
+      gr=parseInt(hex.slice(3,5),16)/255,
+      b=parseInt(hex.slice(5,7),16)/255;
+  const max=Math.max(r,gr,b), min=Math.min(r,gr,b);
+  let h, s, l=(max+min)/2;
+  if (max===min) { h=s=0; }
+  else {
+    const d=max-min;
+    s = l>.5 ? d/(2-max-min) : d/(max+min);
+    switch(max) {
+      case r:  h=((gr-b)/d+(gr<b?6:0))/6; break;
+      case gr: h=((b-r)/d+2)/6; break;
+      default: h=((r-gr)/d+4)/6;
+    }
+  }
+  return { h:h*360, s, l };
+}
 
-async function initSVG(){
-  const response = await fetch('./ETIQUETA.svg');
-  if(!response.ok) throw new Error('No se pudo cargar el SVG');
+function hslToHex({h,s,l}) {
+  h=((h%360)+360)%360; h/=360;
+  function hue2rgb(p,q,t){
+    if(t<0)t+=1; if(t>1)t-=1;
+    if(t<1/6)return p+(q-p)*6*t;
+    if(t<.5) return q;
+    if(t<2/3)return p+(q-p)*(2/3-t)*6;
+    return p;
+  }
+  let r,gr,b;
+  if (!s) { r=gr=b=l; }
+  else {
+    const q=l<.5?l*(1+s):l+s-l*s, p=2*l-q;
+    r=hue2rgb(p,q,h+1/3); gr=hue2rgb(p,q,h); b=hue2rgb(p,q,h-1/3);
+  }
+  return '#'+[r,gr,b].map(v=>Math.round(v*255).toString(16).padStart(2,'0')).join('');
+}
 
-  const svgText = await response.text();
-  g('SW').innerHTML = svgText;
-
-  const svg = g('SW').querySelector('svg');
-  if(!svg) return;
-
-  svg.id = 'LSVG';
-
+// ── PARSEO DEL STYLE SVG ─────────────────────────────────────────
+function parseSVGStyle(svg) {
   const styleEl = svg.querySelector('style');
-  if(styleEl) styleEl.id = 'SVG_STYLE';
+  if (!styleEl) return {};
+  const text=styleEl.textContent, result={};
+  const clsPat=/\.(s\d+)\s*\{([^}]*)\}/g;
+  let m;
+  while ((m=clsPat.exec(text))!==null) {
+    const id=m[1], props=m[2];
+    const fillHex  = props.match(/(?:^|[;{\s])fill\s*:\s*(#[0-9a-fA-F]{3,8})/);
+    const fillNone = /(?:^|[;{\s])fill\s*:\s*none/.test(props);
+    const strokeHex= props.match(/(?:^|[;{\s])stroke\s*:\s*(#[0-9a-fA-F]{3,8})/);
+    if (fillHex && !fillNone) result[id]={color:normalizeHex(fillHex[1]),prop:'fill'};
+    else if (strokeHex) result[id]={color:normalizeHex(strokeHex[1]),prop:'stroke'};
+  }
+  return result;
+}
 
-  const vb = svg.getAttribute('viewBox');
-  if(vb){
-    const p = vb.trim().split(/[\s,]+/);
-    VW = parseFloat(p[2]);
-    VH = parseFloat(p[3]);
+// ── CONSTRUCCIÓN DE GRUPOS DE COLOR ─────────────────────────────
+//
+// Lógica:
+//  1. Auto-detecta IDs con exactamente el mismo color hex → un solo control.
+//     No es necesario listarlos en fused_colors.
+//
+//  2. fused_colors = grupos de IDs con colores DISTINTOS controlados
+//     por un único picker, manteniendo sus diferencias HSL (delta).
+//     Solo lista el ID representativo de cada "tono"; los IDs de igual
+//     color dentro de cada tono se fusionan automáticamente.
+//
+//  3. IDs restantes → controles individuales (agrupados por color igual).
+
+function buildColorGroups(svgColors, metaSvg, metaColors) {
+  const groups=[], assigned=new Set();
+
+  // 1. Mapa de color → [ids]
+  const byColor={};
+  for (const [id,info] of Object.entries(svgColors)) {
+    const key=info.prop+':'+info.color;
+    (byColor[key]||(byColor[key]=[])).push(id);
+  }
+  // sameColorOf: id → todos los IDs con mismo color (incluyendo él mismo)
+  const sameColorOf={};
+  for (const ids of Object.values(byColor))
+    for (const id of ids) sameColorOf[id]=ids;
+
+  // 2. fused_colors (delta entre tonos)
+  const fusedColors = metaSvg?.fused_colors || [];
+  for (const group of fusedColors) {
+    // Solo IDs que existen en el SVG y no asignados aún
+    const validIds = group.filter(id => svgColors[id] && !assigned.has(id));
+    if (!validIds.length) continue;
+
+    const baseId = validIds[0];
+    // Todos los IDs con mismo color que el base (auto-detectados)
+    const baseSameIds = (sameColorOf[baseId]||[baseId]).filter(id=>!assigned.has(id));
+    baseSameIds.forEach(id=>assigned.add(id));
+
+    // Resto del grupo → peers con delta HSL
+    const fusedPeers=[];
+    for (let i=1; i<validIds.length; i++) {
+      const peerId=validIds[i];
+      if (assigned.has(peerId)) continue;
+      const peerSameIds=(sameColorOf[peerId]||[peerId]).filter(id=>!assigned.has(id));
+      if (!peerSameIds.length) continue;
+      peerSameIds.forEach(id=>assigned.add(id));
+      fusedPeers.push({ peerId, sameIds:peerSameIds, origColor:svgColors[peerId].color });
+    }
+
+    // Nombre: primero que tenga entrada en metaColors
+    let name=null;
+    const allInGroup=[...baseSameIds, ...fusedPeers.flatMap(p=>p.sameIds)];
+    for (const id of allInGroup) if (metaColors?.[id]?.name){name=metaColors[id].name;break;}
+    if (!name) for (const id of group) if (metaColors?.[id]?.name){name=metaColors[id].name;break;}
+    if (!name) name=baseId;
+
+    groups.push({ baseId, baseSameIds, fusedPeers, name, idx:groups.length, color:svgColors[baseId].color });
   }
 
+  // 3. IDs sin asignar → controles individuales (agrupados por color igual)
+  const processedKeys=new Set();
+  let colorNum=1;
+  for (const id of Object.keys(svgColors)) {
+    if (assigned.has(id)) continue;
+    const key=svgColors[id].prop+':'+svgColors[id].color;
+    if (processedKeys.has(key)) continue;
+    processedKeys.add(key);
+    const sameIds=(sameColorOf[id]||[id]).filter(id2=>!assigned.has(id2));
+    if (!sameIds.length) continue;
+    sameIds.forEach(id2=>assigned.add(id2));
+    const name=sameIds.map(i=>metaColors?.[i]?.name).find(n=>n)||`Color ${colorNum++}`;
+    groups.push({ baseId:sameIds[0], baseSameIds:sameIds, fusedPeers:[], name, idx:groups.length, color:svgColors[sameIds[0]].color });
+  }
+
+  return groups;
+}
+
+// ── MODIFICAR STYLE DEL SVG ──────────────────────────────────────
+// Opera directamente sobre cualquier elemento SVG (en DOM o en memoria)
+function setCSSPropOnSVG(svg, cls, prop, hex) {
+  if (!svg) return;
+  const styleEl=svg.querySelector('#SVG_STYLE')||svg.querySelector('style');
+  if (!styleEl) return;
+  const lines=styleEl.textContent.split('\n');
+  styleEl.textContent=lines.map(line=>{
+    const m=line.match(/^\s*\.(s\d+)\s*\{/);
+    if (!m||m[1]!==cls) return line;
+    if (prop==='fill')
+      return line.replace(/(fill\s*:\s*)#[0-9a-fA-F]{3,8}/,'$1'+hex);
+    return line.replace(/((?:^|[;{])\s*stroke\s*:\s*)#[0-9a-fA-F]{3,8}/,'$1'+hex);
+  }).join('\n');
+}
+// Wrapper para el SVG activo
+function setCSSProp(cls,prop,hex){ setCSSPropOnSVG(g('LSVG'),cls,prop,hex); }
+
+// ── APLICAR COLOR A UN GRUPO (cualquier SvgState) ────────────────
+// Actualiza grp.color y todos los IDs implicados (base + delta peers).
+function applyGroupColorToSVG(state, idx, hex) {
+  hex=normalizeHex(hex);
+  const grp=state.colorGroups[idx];
+  if (!grp) return;
+  grp.color=hex;
+
+  // Base + sus gemelos de color
+  for (const id of grp.baseSameIds) {
+    const info=state.svgColors[id];
+    if (info) setCSSPropOnSVG(state.el, id, info.prop, hex);
+  }
+
+  // Delta peers: aplicar el mismo desplazamiento HSL
+  if (grp.fusedPeers.length) {
+    const origHSL=hexToHSL(state.svgColors[grp.baseId].color);
+    const newHSL =hexToHSL(hex);
+    const dH=newHSL.h-origHSL.h, dS=newHSL.s-origHSL.s, dL=newHSL.l-origHSL.l;
+    for (const peer of grp.fusedPeers) {
+      const {h,s,l}=hexToHSL(peer.origColor);
+      const pHex=hslToHex({
+        h:(h+dH+360)%360,
+        s:Math.max(0,Math.min(1,s+dS)),
+        l:Math.max(0,Math.min(1,l+dL))
+      });
+      for (const id of peer.sameIds) {
+        const info=state.svgColors[id];
+        if (info) setCSSPropOnSVG(state.el, id, info.prop, pHex);
+      }
+    }
+  }
+}
+
+// ── CAMBIAR COLOR (SVG activo, desde la UI) ──────────────────────
+function setGroupColor(idx, hex) {
+  const st=svgStates[activeIdx];
+  applyGroupColorToSVG(st, idx, normalizeHex(hex));
+  const cEl=g(`ci_${idx}`), hEl=g(`hi_${idx}`);
+  if (cEl) cEl.value=st.colorGroups[idx].color;
+  if (hEl) hEl.value=st.colorGroups[idx].color.toUpperCase();
+  markDirty();
+}
+
+// ── CONSTRUCCIÓN DE UI DE COLORES ────────────────────────────────
+function buildColorUI() {
+  const container=g('colorControlsContainer');
+  container.innerHTML='';
+  const groups=svgStates[activeIdx]?.colorGroups||[];
+
+  if (!groups.length) {
+    container.innerHTML='<p class="clr-loading">No se encontraron colores en el SVG.</p>';
+    return;
+  }
+
+  groups.forEach((grp,i)=>{
+    const row=document.createElement('div');
+    row.className='clr'; row.style.marginBottom='10px';
+
+    const label=document.createElement('span');
+    label.className='cll'; label.textContent=grp.name;
+
+    const colorInput=document.createElement('input');
+    colorInput.type='color'; colorInput.id=`ci_${i}`;
+    colorInput.value=grp.color; colorInput.autocomplete='off';
+    colorInput.addEventListener('input',()=>setGroupColor(i,colorInput.value));
+
+    const hexInput=document.createElement('input');
+    hexInput.type='text'; hexInput.className='hx'; hexInput.id=`hi_${i}`;
+    hexInput.value=grp.color.toUpperCase(); hexInput.maxLength=7;
+    hexInput.addEventListener('change',()=>{
+      let h=hexInput.value.trim();
+      if (!h.startsWith('#')) h='#'+h;
+      if (/^#[0-9a-fA-F]{6}$/.test(h)) setGroupColor(i,h);
+      else hexInput.value=svgStates[activeIdx].colorGroups[i].color.toUpperCase();
+    });
+
+    const sw=document.createElement('div'); sw.className='csw';
+    sw.appendChild(colorInput); sw.appendChild(hexInput);
+    row.appendChild(label); row.appendChild(sw);
+    container.appendChild(row);
+
+    // Hint de IDs: base · base2  Δpeer1 · peer1b  Δpeer2
+    const hasMultiple=grp.baseSameIds.length>1||grp.fusedPeers.length>0;
+    if (hasMultiple) {
+      const hint=document.createElement('span');
+      hint.className='clr-ids';
+      const parts=[document.createTextNode(grp.baseSameIds.join(' · '))];
+      for (const peer of grp.fusedPeers) {
+        parts.push(document.createTextNode('  '));
+        const sp=document.createElement('span');
+        sp.className='clr-ids-delta';
+        sp.textContent='Δ '+peer.sameIds.join(' · ');
+        parts.push(sp);
+      }
+      parts.forEach(p=>hint.appendChild(p));
+      container.appendChild(hint);
+    }
+  });
+
+  const last=container.lastElementChild;
+  if (last) last.style.marginBottom='0';
+}
+
+// ── CARGA DE METADATOS ───────────────────────────────────────────
+async function loadMeta() {
+  try {
+    const res=await fetch('./label-meta.json');
+    if (res.ok) return await res.json();
+    console.warn('label-meta.json no encontrado, usando config automática');
+  } catch(e){ console.warn('Error cargando label-meta.json:',e.message); }
+  return null;
+}
+
+// ── CARGA DE SVGs ────────────────────────────────────────────────
+async function loadAllSVGs() {
+  const sw=g('SW');
+
+  // Determinar lista de SVGs desde meta
+  let svgList;
+  if (meta?.svgs && Object.keys(meta.svgs).length) {
+    // Nuevo formato: meta.svgs = { "archivo.svg": { fused_colors, filter, colors? } }
+    svgList=Object.entries(meta.svgs).map(([name,cfg])=>({
+      name,
+      fusedColors:  cfg.fused_colors||[],
+      filterPreset: cfg.filter||'clean',
+      colorMeta:    cfg.colors||null   // colores propios del SVG (sobreescribe el global)
+    }));
+  } else {
+    // Retrocompatibilidad: formato antiguo (fused_colors y filter en la raíz)
+    svgList=[{ name:'ETIQUETA.svg', fusedColors:meta?.fused_colors||[], filterPreset:meta?.filter||'clean' }];
+  }
+
+  for (const {name,fusedColors,filterPreset,colorMeta} of svgList) {
+    try {
+      const res=await fetch('./'+name);
+      if (!res.ok){ console.warn(`No se pudo cargar ${name}`); continue; }
+      const text=await res.text();
+
+      const div=document.createElement('div');
+      div.innerHTML=text;
+      const svgEl=div.querySelector('svg');
+      if (!svgEl) continue;
+
+      svgEl.id='LSVG';
+      const styleEl=svgEl.querySelector('style');
+      if (styleEl) styleEl.id='SVG_STYLE';
+
+      // Parsear colores ANTES de cualquier modificación
+      const svgColors=parseSVGStyle(svgEl);
+
+      // Dimensiones del viewBox
+      let svgVW=3120, svgVH=2100;
+      const vb=svgEl.getAttribute('viewBox');
+      if (vb){ const p=vb.trim().split(/[\s,]+/); svgVW=parseFloat(p[2]); svgVH=parseFloat(p[3]); }
+
+      // Construir grupos de color — usa colores del SVG primero, luego el global
+      const colorGroups=buildColorGroups(svgColors,{fused_colors:fusedColors},colorMeta||meta?.colors);
+
+      const state={ name, el:svgEl, svgColors, colorGroups, VW:svgVW, VH:svgVH, filterPreset, filterState:null };
+      svgStates.push(state);
+
+      // Inyectar filtros (setup trabaja sobre el elemento en memoria)
+      VW=svgVW; VH=svgVH;
+      setup(svgEl);
+
+    } catch(e){ console.warn(`Error al procesar ${name}:`,e.message); }
+  }
+
+  if (!svgStates.length) {
+    sw.innerHTML='<p style="color:var(--t2);padding:20px;font-size:12px">Error: no se pudo cargar ningún SVG.<br>Verifica que los archivos estén en la misma carpeta que index.html.</p>';
+    return;
+  }
+
+  // Adjuntar el primer SVG al DOM
+  const st=svgStates[0];
+  sw.appendChild(st.el);
+  VW=st.VW; VH=st.VH;
+  const previewW=sw.offsetWidth||540;
+  sw.style.height=Math.round(previewW*VH/VW)+'px';
   updPngInfo();
 }
 
-// Recolecta el estado completo de la UI
-function collectConfig(){
-  currentConfig = {
-    s5:g('c_s5').value,
-    s0:g('c_s0').value,
-    s2:g('c_s2').value,
-    s3:g('c_s3').value,
-    gold:g('c_gold').value,
-    s1:g('c_s1').value,
-    s7:g('c_s7').value,
-
-    fi:gv('fR'),
-    fr:gv('frR'),
-    ft:NT,
-
-    pi:gv('sR'),
-    ps:gv('sfR'),
-
-    ei:gv('eR'),
-    em:EM,
-
-    bi:gv('bR'),
-    bs:gv('bfR'),
-    bt:BT,
-
-    sat:gv('satR'),
-    pngScale:parseInt(g('pngScaleR').value)
-  };
-
-  return structuredClone(currentConfig);
+// ── TABS ─────────────────────────────────────────────────────────
+function buildTabUI() {
+  const tabBar=g('tabBar');
+  if (svgStates.length<=1) return;
+  tabBar.style.display='flex';
+  svgStates.forEach((state,i)=>{
+    const btn=document.createElement('button');
+    btn.className='tab-btn'+(i===0?' active':'');
+    btn.textContent=state.name.replace(/\.[^.]+$/,'');
+    btn.onclick=()=>switchTab(i);
+    tabBar.appendChild(btn);
+  });
 }
 
-// Aplica un objeto config a la UI y al SVG
-function applyConfig(cfg){
-  currentConfig = structuredClone(cfg);
+function switchTab(idx) {
+  if (idx===activeIdx||idx<0||idx>=svgStates.length) return;
+
+  // Guardar estado de filtros Y dirty del tab activo
+  svgStates[activeIdx].filterState=captureFilterState();
+  svgStates[activeIdx].isDirty=_isDirty;
+
+  // Intercambiar SVG en DOM
+  const sw=g('SW');
+  sw.removeChild(svgStates[activeIdx].el);
+  activeIdx=idx;
+  sw.appendChild(svgStates[activeIdx].el);
+
+  // Actualizar dimensiones globales
+  VW=svgStates[activeIdx].VW; VH=svgStates[activeIdx].VH;
+  sw.style.height=Math.round((sw.offsetWidth||540)*VH/VW)+'px';
+  updPngInfo();
+
+  // Restaurar estado de filtros del nuevo tab
   _suppressDirty=true;
-  try{
-    // Colores
-    if(cfg.s5)  setSVGColor('s5','fill',cfg.s5);
-    if(cfg.s0)  {setSVGColor('s0','fill',cfg.s0); setCSSProp('s11','stroke',cfg.s0);}
-    if(cfg.s2)  setSVGColor('s2','fill',cfg.s2);
-    if(cfg.s3)  setSVGColor('s3','fill',cfg.s3);
-    if(cfg.gold) setGold(cfg.gold);
-    if(cfg.s1)  setSVGColor('s1','fill',cfg.s1);
-    if(cfg.s7)  setSVGColor('s7','fill',cfg.s7);
-    // Sliders
-    if(cfg.fi  !==undefined) g('fR').value  = cfg.fi;
-    if(cfg.fr  !==undefined) g('frR').value = cfg.fr;
-    if(cfg.pi  !==undefined) g('sR').value  = cfg.pi;
-    if(cfg.ps  !==undefined) g('sfR').value = cfg.ps;
-    if(cfg.ei  !==undefined) g('eR').value  = cfg.ei;
-    if(cfg.bi  !==undefined) g('bR').value  = cfg.bi;
-    if(cfg.bs  !==undefined) g('bfR').value = cfg.bs;
-    if(cfg.sat !==undefined) g('satR').value= cfg.sat;
-    if(cfg.pngScale)         {g('pngScaleR').value=cfg.pngScale; updPngInfo();}
-    // Modos
-    if(cfg.ft){
-      NT=cfg.ft;
-      g('nt1').classList.toggle('on',NT==='fractalNoise');
-      g('nt2').classList.toggle('on',NT==='turbulence');
+  try {
+    const fs=svgStates[activeIdx].filterState;
+    if (fs) restoreFilterState(fs);
+    else    applyP(svgStates[activeIdx].filterPreset);
+  } finally { _suppressDirty=false; }
+
+  // Actualizar botones de tab
+  document.querySelectorAll('.tab-btn').forEach((btn,i)=>btn.classList.toggle('active',i===activeIdx));
+
+  // Reconstruir controles de color
+  buildColorUI();
+  // Restaurar el estado dirty del tab destino (en lugar de siempre markClean)
+  _isDirty=svgStates[activeIdx].isDirty||false;
+  refreshDirtyUI();
+}
+
+// ── FILTER STATE ─────────────────────────────────────────────────
+function captureFilterState() {
+  return {
+    fR:gv('fR'), frR:gv('frR'), sR:gv('sR'), sfR:gv('sfR'),
+    eR:gv('eR'), bR:gv('bR'),  bfR:gv('bfR'), satR:gv('satR'),
+    pngScale:parseInt(g('pngScaleR').value), NT, EM, BT
+  };
+}
+
+function restoreFilterState(fs) {
+  if (!fs) return;
+  if (fs.fR   !==undefined) g('fR').value  =fs.fR;
+  if (fs.frR  !==undefined) g('frR').value =fs.frR;
+  if (fs.sR   !==undefined) g('sR').value  =fs.sR;
+  if (fs.sfR  !==undefined) g('sfR').value =fs.sfR;
+  if (fs.eR   !==undefined) g('eR').value  =fs.eR;
+  if (fs.bR   !==undefined) g('bR').value  =fs.bR;
+  if (fs.bfR  !==undefined) g('bfR').value =fs.bfR;
+  if (fs.satR !==undefined) g('satR').value=fs.satR;
+  if (fs.pngScale) { g('pngScaleR').value=fs.pngScale; updPngInfo(); }
+  if (fs.NT){ NT=fs.NT; g('nt1').classList.toggle('on',NT==='fractalNoise'); g('nt2').classList.toggle('on',NT==='turbulence'); }
+  if (fs.EM){ EM=fs.EM; g('eb1').classList.toggle('on',EM==='overlay'); g('eb2').classList.toggle('on',EM==='soft-light'); g('eb3').classList.toggle('on',EM==='hard-light'); }
+  if (fs.BT){ BT=fs.BT; g('bt1').classList.toggle('on',BT==='fractalNoise'); g('bt2').classList.toggle('on',BT==='turbulence'); }
+  upd();
+}
+
+function presetToFilterState(name) {
+  const p=presets[name]||presets.clean;
+  return { fR:p.f, frR:p.fr, sR:p.s, sfR:p.sf, eR:p.e, bR:p.b, bfR:p.bf, satR:p.sat, pngScale:100, NT:p.nt, EM:p.em, BT:p.bt };
+}
+
+// ── PERSISTENCIA ─────────────────────────────────────────────────
+const LS_PREFIX='svgEditor_v3_';
+
+function loadLS(key){ try{ const s=localStorage.getItem(key); return s?JSON.parse(s):null; }catch(e){return null;} }
+function saveLS(key,c){ try{ localStorage.setItem(key,JSON.stringify(c)); return true; }catch(e){return false;} }
+function clearLS(key){ try{ localStorage.removeItem(key); }catch(e){} }
+
+/** Recoge config del SVG activo en un objeto serializable. */
+function collectConfig() {
+  const st=svgStates[activeIdx];
+  const colorCfg={};
+  for (const grp of st.colorGroups) colorCfg[grp.baseId]=grp.color;
+  return { v:3, svgName:st.name, colors:colorCfg, filters:captureFilterState() };
+}
+
+/** Aplica una config guardada a un SvgState específico. */
+function applyConfigToState(state, cfg) {
+  if (!cfg) return;
+
+  // Migración: formato antiguo v2 (colores en la raíz, sin campo colors)
+  if (cfg.v!==3 && !cfg.colors) {
+    const migrated={};
+    for (const key of Object.keys(cfg))
+      if (/^s\d+$/.test(key) && typeof cfg[key]==='string') migrated[key]=cfg[key];
+    if (Object.keys(migrated).length) cfg={...cfg, colors:migrated};
+  }
+
+  // Colores: buscar por baseId o por cualquier ID en baseSameIds
+  if (cfg.colors) {
+    for (let i=0; i<state.colorGroups.length; i++) {
+      const grp=state.colorGroups[i];
+      const saved=grp.baseSameIds.map(id=>cfg.colors[id]).find(c=>c);
+      if (saved) applyGroupColorToSVG(state, i, saved);
     }
-    if(cfg.em){
-      EM=cfg.em;
-      g('eb1').classList.toggle('on',EM==='overlay');
-      g('eb2').classList.toggle('on',EM==='soft-light');
-      g('eb3').classList.toggle('on',EM==='hard-light');
-    }
-    if(cfg.bt){
-      BT=cfg.bt;
-      g('bt1').classList.toggle('on',BT==='fractalNoise');
-      g('bt2').classList.toggle('on',BT==='turbulence');
-    }
-    upd();
-  }finally{
-    _suppressDirty=false;
+  }
+
+  // Filtros: nuevo formato (objeto filters) o antiguo (claves sueltas)
+  if (cfg.filters) {
+    state.filterState=cfg.filters;
+  } else {
+    // Claves antiguas: fi,fr,pi,ps,ei,bi,bs,sat + ft,em,bt
+    const fs={};
+    const map={fi:'fR',fr:'frR',pi:'sR',ps:'sfR',ei:'eR',bi:'bR',bs:'bfR',sat:'satR'};
+    for (const [ck,fk] of Object.entries(map)) if (cfg[ck]!==undefined) fs[fk]=cfg[ck];
+    if (cfg.ft) fs.NT=cfg.ft; if (cfg.em) fs.EM=cfg.em; if (cfg.bt) fs.BT=cfg.bt;
+    if (cfg.pngScale) fs.pngScale=cfg.pngScale;
+    if (Object.keys(fs).length) state.filterState=fs;
   }
 }
 
-// ── localStorage ─────────────────────────────────────────────────
-function loadLS(){
-  try{const s=localStorage.getItem(LS_KEY); return s?JSON.parse(s):null;}
-  catch(e){return null;}
+function saveConfig() {
+  const st=svgStates[activeIdx]; if (!st) return;
+  if (saveLS(LS_PREFIX+st.name, collectConfig())) markClean();
 }
-function saveLS(c){
-  try{localStorage.setItem(LS_KEY,JSON.stringify(c)); return true;}
-  catch(e){return false;}
+
+function legacyCopy(text) {
+  const ta=document.createElement('textarea'); ta.value=text;
+  ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+  document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
 }
-function clearLS(){
-  try{localStorage.removeItem(LS_KEY);}catch(e){}
+
+function copyConfigURL() {
+  const url=buildURL(collectConfig()); const btn=g('copyURLBtn');
+  const flash=()=>{ const o=btn.textContent; btn.textContent='✓ Copiado'; setTimeout(()=>{btn.textContent=o;},2000); };
+  if (navigator.clipboard) navigator.clipboard.writeText(url).then(flash).catch(()=>{legacyCopy(url);flash();});
+  else { legacyCopy(url); flash(); }
+}
+
+function resetConfig() {
+  if (!confirm('¿Restablecer todos los ajustes?\nSe eliminará la configuración guardada en este navegador.')) return;
+  _suppressDirty=true;
+  try {
+    for (const st of svgStates) {
+      clearLS(LS_PREFIX+st.name);
+      for (let i=0; i<st.colorGroups.length; i++) {
+        const orig=st.svgColors[st.colorGroups[i].baseId]?.color;
+        if (orig) applyGroupColorToSVG(st, i, orig);
+      }
+      st.filterState=presetToFilterState(st.filterPreset);
+    }
+    restoreFilterState(svgStates[activeIdx].filterState);
+    buildColorUI();
+    g('pngScaleR').value=100; updPngInfo();
+  } finally { _suppressDirty=false; }
+  markClean();
 }
 
 // ── URL encode / decode ──────────────────────────────────────────
-// Usa btoa (todos los valores son ASCII: colores hex, números, strings de modo)
-function encodeURL(cfg){
-  try{return btoa(JSON.stringify(cfg));}
-  catch(e){return '';}
-}
-function decodeURL(s){
-  try{return JSON.parse(atob(s));}
-  catch(e){return null;}
-}
-function getURLConfig(){
-  try{
-    const p=new URLSearchParams(window.location.search);
-    const c=p.get('c');
-    return c?decodeURL(c):null;
-  }catch(e){return null;}
-}
-function buildURL(cfg){
-  return window.location.origin+window.location.pathname+'?c='+encodeURL(cfg);
-}
+function encodeURL(cfg){ try{ return btoa(JSON.stringify(cfg)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,''); }catch(e){return '';} }
+function decodeURL(s){ try{ const b64=s.replace(/-/g,'+').replace(/_/g,'/'); return JSON.parse(atob(b64+'='.repeat((4-b64.length%4)%4))); }catch(e){return null;} }
+function getURLConfig(){ try{ const c=new URLSearchParams(window.location.search).get('c'); return c?decodeURL(c):null; }catch(e){return null;} }
+function buildURL(cfg){ return window.location.origin+window.location.pathname+'?c='+encodeURL(cfg); }
 
-// ── Estado dirty ─────────────────────────────────────────────────
-function markDirty(){
-  if(_suppressDirty)return;
-  _isDirty=true;
-  refreshDirtyUI();
-}
-function markClean(){
-  _isDirty=false;
-  refreshDirtyUI();
-}
+// ── ESTADO DIRTY ─────────────────────────────────────────────────
+function markDirty(){ if(_suppressDirty)return; _isDirty=true; refreshDirtyUI(); }
+function markClean(){ _isDirty=false; refreshDirtyUI(); }
 function refreshDirtyUI(){
   const bar=g('dirtyBar'), btn=g('saveBtn');
   if(bar) bar.style.display=_isDirty?'flex':'none';
-  if(btn){
-    if(_isDirty) btn.classList.add('primary');
-    else         btn.classList.remove('primary');
-  }
-}
-
-// ── Acciones de persistencia ─────────────────────────────────────
-
-function saveConfig(){
-  const cfg=collectConfig();
-  if(saveLS(cfg)){_savedCfg=cfg; markClean();}
-}
-
-function legacyCopy(text){
-  const ta=document.createElement('textarea');
-  ta.value=text; ta.style.cssText='position:fixed;top:0;left:0;opacity:0;pointer-events:none';
-  document.body.appendChild(ta); ta.select();
-  document.execCommand('copy');
-  document.body.removeChild(ta);
-}
-function copyConfigURL(){
-  const url = buildURL(currentConfig || collectConfig());
-  const btn=g('copyURLBtn');
-  const flash=()=>{
-    const orig=btn.textContent;
-    btn.textContent='✓ Copiado';
-    setTimeout(()=>{btn.textContent=orig;},2000);
-  };
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(url).then(flash).catch(()=>{legacyCopy(url);flash();});
-  }else{
-    legacyCopy(url); flash();
-  }
-}
-
-function resetConfig(){
-  if(!confirm('¿Restablecer todos los ajustes a los valores predeterminados?\nSe eliminará la configuración guardada en este navegador.'))return;
-  clearLS();
-  _suppressDirty=true;
-  // Colores por defecto
-  setSVGColor('s5','fill','#632014');
-  setSVGColor('s0','fill','#f0dccf'); setCSSProp('s11','stroke','#f0dccf');
-  setSVGColor('s2','fill','#86190c');
-  setSVGColor('s3','fill','#c01113');
-  setGold('#964b05');
-  setSVGColor('s1','fill','#2a2a2a');
-  setSVGColor('s7','fill','#e9e9e9');
-  // Preset clean (valores iniciales)
-  applyP('clean');
-  g('pngScaleR').value=100; updPngInfo();
-  _suppressDirty=false;
-  _savedCfg=null;
-  markClean();
-}
-
-// ── Init con persistencia ────────────────────────────────────────
-//
-// Lógica de prioridad:
-//   URL config presente + sin localStorage  → guarda URL config en LS, aplica
-//   URL config presente + localStorage OK   → aplica LS (no sobreescribe), ignora URL
-//   Sin URL + localStorage OK               → aplica LS
-//   Sin nada                                → aplica preset 'clean' (sin guardar)
-//
-// En todos los casos limpia la URL con history.replaceState (funciona en GitHub Pages).
-//
-function initWithPersistence(){
-  const urlCfg = getURLConfig();
-  const lsCfg  = loadLS();
-
-  if(urlCfg){
-    // Limpiar la URL sin recargar la página
-    history.replaceState(null,'',window.location.pathname);
-
-    if(!lsCfg){
-      // Sin config guardada: guardar la URL como config propia
-      saveLS(urlCfg);
-      _savedCfg=urlCfg;
-      applyConfig(urlCfg);
-    }else{
-      // Ya tiene config guardada: la URL config se descarta, prioridad al LS
-      _savedCfg=lsCfg;
-      applyConfig(lsCfg);
-    }
-  }else if(lsCfg){
-    _savedCfg=lsCfg;
-    applyConfig(lsCfg);
-  }else{
-    applyP('clean');
-  }
-  markClean();
-}
-
-
-// ── COLOR HELPERS ────────────────────────────────────────────────
-function hexToRgb(hex){
-  const h=hex.replace('#','');
-  return[parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)];
-}
-function rgbToHex(r,g2,b){
-  return'#'+[r,g2,b].map(v=>Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0')).join('');
-}
-function hexToHsl(hex){
-  let[r,g2,b]=hexToRgb(hex); r/=255; g2/=255; b/=255;
-  const mx=Math.max(r,g2,b),mn=Math.min(r,g2,b);
-  let h=0,s=0,l=(mx+mn)/2;
-  if(mx!==mn){
-    const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn);
-    if(mx===r)       h=((g2-b)/d+(g2<b?6:0))/6;
-    else if(mx===g2) h=((b-r)/d+2)/6;
-    else             h=((r-g2)/d+4)/6;
-  }
-  return[h*360,s*100,l*100];
-}
-function hslToHex(h,s,l){
-  h/=360; s/=100; l/=100;
-  const f=n=>{const k=(n+h*12)%12,a=s*Math.min(l,1-l); return l-a*Math.max(-1,Math.min(k-3,9-k,1));};
-  return rgbToHex(Math.round(f(0)*255),Math.round(f(8)*255),Math.round(f(4)*255));
-}
-const GOLD_BASE={s4:'#964b05',s8:'#a6580f',s9:'#bc6b16'};
-const GOLD_REF='#964b05';
-function calcGoldTones(nb){
-  const[nh,ns,nl]=hexToHsl(nb);
-  const[bh,bs,bl]=hexToHsl(GOLD_REF);
-  return Object.values(GOLD_BASE).map(o=>{
-    const[th,ts,tl]=hexToHsl(o);
-    return hslToHex(
-      ((nh+(th-bh))%360+360)%360,
-      Math.max(0,Math.min(100,ns+(ts-bs))),
-      Math.max(5,Math.min(95,nl+(tl-bl)))
-    );
-  });
-}
-
-// ── CAMBIO DE COLOR ───────────────────────────────────────────────
-function setCSSProp(cls,prop,hex){
-  const svg=g('LSVG'); if(!svg)return;
-  const styleEl=svg.querySelector('#SVG_STYLE'); if(!styleEl)return;
-  const lines=styleEl.textContent.split('\n');
-  const out=lines.map(line=>{
-    const clsMatch=line.match(/^\s*\.(s\d+)\s*\{/);
-    if(!clsMatch||clsMatch[1]!==cls)return line;
-    if(prop==='fill'){
-      return line.replace(/(fill\s*:\s*)#[0-9a-fA-F]{3,8}/,'$1'+hex);
-    }else{
-      return line.replace(/((?:^|[;{])\s*stroke\s*:\s*)#[0-9a-fA-F]{3,8}/,'$1'+hex);
-    }
-  });
-  styleEl.textContent=out.join('\n');
-}
-
-function setSVGColor(cls,prop,hex){
-  setCSSProp(cls,prop,hex);
-  const cEl=g('c_'+cls), hEl=g('h_'+cls);
-  if(cEl)cEl.value=hex;
-  if(hEl)hEl.value=hex.toUpperCase();
-  markDirty(); // ← marca dirty solo si no estamos en applyConfig/reset
-}
-
-function hexInput(cls,prop,val){
-  let h=val.trim(); if(!h.startsWith('#'))h='#'+h;
-  if(/^#[0-9a-fA-F]{6}$/.test(h))setSVGColor(cls,prop,h);
-}
-
-function setGold(base){
-  g('h_gold').value=base.toUpperCase(); g('c_gold').value=base;
-  const[c4,c8,c9]=calcGoldTones(base);
-  setSVGColor('s4','fill',c4);
-  setCSSProp('s6','stroke',c4);
-  setCSSProp('s10','stroke',c4);
-  setSVGColor('s8','fill',c8);
-  setSVGColor('s9','fill',c9);
-  g('gp4').style.background=c4; g('gp8').style.background=c8; g('gp9').style.background=c9;
-}
-function hexInputGold(val){
-  let h=val.trim(); if(!h.startsWith('#'))h='#'+h;
-  if(/^#[0-9a-fA-F]{6}$/.test(h))setGold(h);
+  if(btn) btn.classList.toggle('primary',_isDirty);
 }
 
 // ── FILTROS SVG ──────────────────────────────────────────────────
-function setup(){
-  const svg=g('LSVG'); if(!svg)return;
+// setup ahora acepta el elemento SVG directamente (no requiere estar en DOM)
+function setup(svg) {
+  if (!svg) svg=g('LSVG');
+  if (!svg) return;
   let defs=svg.querySelector('defs');
-  if(!defs){defs=document.createElementNS(NS,'defs'); svg.insertBefore(defs,svg.firstChild);}
+  if (!defs){ defs=document.createElementNS(NS,'defs'); svg.insertBefore(defs,svg.firstChild); }
   svg.querySelectorAll('[id^="TF-"],[id^="TC-"],[id^="TO-"]').forEach(e=>e.remove());
   svg.querySelectorAll('[id^="bg-"]').forEach(bgPath=>{
     const z=bgPath.id.replace('bg-','');
     const cid='TC-'+z;
     const cp=document.createElementNS(NS,'clipPath'); cp.id=cid;
     const cl=bgPath.cloneNode(true);
-    cl.removeAttribute('id'); cl.removeAttribute('filter'); cl.removeAttribute('style'); cl.setAttribute('fill','white');
+    cl.removeAttribute('id'); cl.removeAttribute('filter'); cl.removeAttribute('style');
+    cl.setAttribute('fill','white');
     cp.appendChild(cl); defs.appendChild(cp);
     defs.appendChild(buildFiberFilter('TF-FIB-'+z));
-    defs.appendChild(buildBurnFilter('TF-BRN-'+z));
+    defs.appendChild(buildBurnFilter ('TF-BRN-'+z));
     defs.appendChild(buildEmbossFilter('TF-EMB-'+z));
     const mkRect=(sfx,fid,blend)=>{
       const r=document.createElementNS(NS,'rect');
@@ -608,53 +797,56 @@ function setup(){
   });
 }
 
-function buildFiberFilter(fid){
-  const f=mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
-  const ft1=mkEl('feTurbulence',{id:fid+'-ft1',type:NT,baseFrequency:'.65 .35',numOctaves:'4',seed:'3',result:'n1'});
-  const gn1=mkEl('feColorMatrix',{in:'n1',type:'saturate',values:'0',result:'gf'});
-  const fv0=.25;
-  const fi=mkEl('feColorMatrix',{id:fid+'-fi',in:'gf',type:'matrix',
+function buildFiberFilter(fid) {
+  const f   = mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
+  const ft1 = mkEl('feTurbulence',{id:fid+'-ft1',type:NT,baseFrequency:'.65 .35',numOctaves:'4',seed:'3',result:'n1'});
+  const gn1 = mkEl('feColorMatrix',{in:'n1',type:'saturate',values:'0',result:'gf'});
+  const fv0 = .25;
+  const fi  = mkEl('feColorMatrix',{id:fid+'-fi',in:'gf',type:'matrix',
     values:`${(-fv0*.9).toFixed(3)} 0 0 0 1  ${-fv0} 0 0 0 1  ${(-fv0*1.1).toFixed(3)} 0 0 0 1  0 0 0 0 1`,result:'fc'});
-  const ft2=mkEl('feTurbulence',{id:fid+'-ft2',type:'fractalNoise',baseFrequency:'.018 .009',numOctaves:'2',seed:'7',result:'n2'});
-  const gn2=mkEl('feColorMatrix',{in:'n2',type:'saturate',values:'0',result:'gs'});
-  const sv0=.12;
-  const st=mkEl('feColorMatrix',{id:fid+'-st',in:'gs',type:'matrix',
+  const ft2 = mkEl('feTurbulence',{id:fid+'-ft2',type:'fractalNoise',baseFrequency:'.018 .009',numOctaves:'2',seed:'7',result:'n2'});
+  const gn2 = mkEl('feColorMatrix',{in:'n2',type:'saturate',values:'0',result:'gs'});
+  const sv0 = .12;
+  const st  = mkEl('feColorMatrix',{id:fid+'-st',in:'gs',type:'matrix',
     values:`${(-sv0*.70).toFixed(3)} 0 0 0 1  ${(-sv0*.85).toFixed(3)} 0 0 0 1  ${(-sv0*.95).toFixed(3)} 0 0 0 1  0 0 0 0 1`,result:'sc'});
-  const b=mkEl('feBlend',{in:'fc',in2:'sc',mode:'multiply'});
-  [ft1,gn1,fi,ft2,gn2,st,b].forEach(n=>f.appendChild(n)); return f;
+  const b   = mkEl('feBlend',{in:'fc',in2:'sc',mode:'multiply'});
+  [ft1,gn1,fi,ft2,gn2,st,b].forEach(n=>f.appendChild(n));
+  return f;
 }
 
-function buildBurnFilter(fid){
-  const f=mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
-  const ft3=mkEl('feTurbulence',{id:fid+'-ft3',type:BT,baseFrequency:'.022 .011',numOctaves:'3',seed:'11',result:'n3'});
-  const gn3=mkEl('feColorMatrix',{in:'n3',type:'saturate',values:'0',result:'gb'});
-  const bv0=.25;
-  const bn=mkEl('feColorMatrix',{id:fid+'-bn',in:'gb',type:'matrix',
+function buildBurnFilter(fid) {
+  const f   = mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
+  const ft3 = mkEl('feTurbulence',{id:fid+'-ft3',type:BT,baseFrequency:'.022 .011',numOctaves:'3',seed:'11',result:'n3'});
+  const gn3 = mkEl('feColorMatrix',{in:'n3',type:'saturate',values:'0',result:'gb'});
+  const bv0 = .25;
+  const bn  = mkEl('feColorMatrix',{id:fid+'-bn',in:'gb',type:'matrix',
     values:`${bv0} 0 0 0 0  ${(bv0*.97).toFixed(3)} 0 0 0 0  ${(bv0*.88).toFixed(3)} 0 0 0 0  0 0 0 0 1`});
-  [ft3,gn3,bn].forEach(n=>f.appendChild(n)); return f;
+  [ft3,gn3,bn].forEach(n=>f.appendChild(n));
+  return f;
 }
 
-function buildEmbossFilter(fid){
-  const f=mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
-  const ft1=mkEl('feTurbulence',{id:fid+'-ft1',type:NT,baseFrequency:'.65 .35',numOctaves:'4',seed:'3',result:'n1'});
-  const gn1=mkEl('feColorMatrix',{in:'n1',type:'saturate',values:'0',result:'gf'});
-  const em=mkEl('feConvolveMatrix',{id:fid+'-em',in:'gf',order:'3',
+function buildEmbossFilter(fid) {
+  const f   = mkEl('filter',{id:fid,x:'0%',y:'0%',width:'100%',height:'100%','color-interpolation-filters':'sRGB'});
+  const ft1 = mkEl('feTurbulence',{id:fid+'-ft1',type:NT,baseFrequency:'.65 .35',numOctaves:'4',seed:'3',result:'n1'});
+  const gn1 = mkEl('feColorMatrix',{in:'n1',type:'saturate',values:'0',result:'gf'});
+  const em  = mkEl('feConvolveMatrix',{id:fid+'-em',in:'gf',order:'3',
     kernelMatrix:'-1 -1 0  -1 0 1  0 1 1',divisor:'4',bias:'.5',result:'emb'});
   const ev0=.35; const half=(0.5*(1-ev0)).toFixed(3);
-  const ea=mkEl('feColorMatrix',{id:fid+'-ea',in:'emb',type:'matrix',
+  const ea  = mkEl('feColorMatrix',{id:fid+'-ea',in:'emb',type:'matrix',
     values:`${ev0} 0 0 0 ${half}  0 ${ev0} 0 0 ${half}  0 0 ${ev0} 0 ${half}  0 0 0 0 1`});
-  [ft1,gn1,em,ea].forEach(n=>f.appendChild(n)); return f;
+  [ft1,gn1,em,ea].forEach(n=>f.appendChild(n));
+  return f;
 }
 
 // ── ACTUALIZAR FILTROS ───────────────────────────────────────────
-function upd(){
-  const svg=g('LSVG'); if(!svg)return;
+function upd() {
+  const svg=g('LSVG'); if (!svg) return;
   const fv=gv('fR'),fr=gv('frR'),sv=gv('sR'),sf=gv('sfR'),
         ev=gv('eR'),bv=gv('bR'),bf=gv('bfR'),sat=gv('satR');
-  g('fV').textContent=Math.round(fv*100)+'%'; g('frV').textContent=fr.toFixed(2);
-  g('sV').textContent=Math.round(sv*100)+'%'; g('sfV').textContent=sf.toFixed(3);
-  g('eV').textContent=Math.round(ev*100)+'%'; g('bV').textContent=Math.round(bv*100)+'%';
-  g('bfV').textContent=bf.toFixed(3);         g('satV').textContent=sat.toFixed(2);
+  g('fV').textContent  =Math.round(fv*100)+'%'; g('frV').textContent =fr.toFixed(2);
+  g('sV').textContent  =Math.round(sv*100)+'%'; g('sfV').textContent =sf.toFixed(3);
+  g('eV').textContent  =Math.round(ev*100)+'%'; g('bV').textContent  =Math.round(bv*100)+'%';
+  g('bfV').textContent =bf.toFixed(3);           g('satV').textContent=sat.toFixed(2);
   svg.style.filter=`saturate(${sat.toFixed(2)})`;
   svg.querySelectorAll('[id^="bg-"]').forEach(bgPath=>{
     const z=bgPath.id.replace('bg-','');
@@ -674,46 +866,47 @@ function upd(){
     const embRect=svg.querySelector('#TO-EMB-'+z);
     if(eft1){eft1.setAttribute('type',NT); eft1.setAttribute('baseFrequency',`${fr.toFixed(3)} ${(fr*.54).toFixed(3)}`);}
     if(eea){const half=(0.5*(1-ev)).toFixed(3); eea.setAttribute('values',`${ev.toFixed(3)} 0 0 0 ${half}  0 ${ev.toFixed(3)} 0 0 ${half}  0 0 ${ev.toFixed(3)} 0 ${half}  0 0 0 0 1`);}
-    if(embRect)embRect.setAttribute('style',`mix-blend-mode:${EM};pointer-events:none`);
+    if(embRect) embRect.setAttribute('style',`mix-blend-mode:${EM};pointer-events:none`);
   });
-  markDirty(); // ← solo marca si no estamos en applyConfig/reset
+  markDirty();
 }
 
 function setNT(v,btn){NT=v; document.querySelectorAll('#nt1,#nt2').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); upd();}
 function setEM(v,btn){EM=v; document.querySelectorAll('#eb1,#eb2,#eb3').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); upd();}
 function setBT(v,btn){BT=v; document.querySelectorAll('#bt1,#bt2').forEach(b=>b.classList.remove('on')); btn.classList.add('on'); upd();}
 
-function applyP(name){
-  const p=presets[name];
-  g('fR').value=p.f;   g('frR').value=p.fr; g('sR').value=p.s;   g('sfR').value=p.sf;
-  g('eR').value=p.e;   g('bR').value=p.b;   g('bfR').value=p.bf; g('satR').value=p.sat;
+function applyP(name) {
+  const p=presets[name]; if (!p) return;
+  g('fR').value=p.f;  g('frR').value=p.fr; g('sR').value=p.s;   g('sfR').value=p.sf;
+  g('eR').value=p.e;  g('bR').value=p.b;   g('bfR').value=p.bf; g('satR').value=p.sat;
   NT=p.nt; EM=p.em; BT=p.bt;
   g('nt1').classList.toggle('on',p.nt==='fractalNoise'); g('nt2').classList.toggle('on',p.nt==='turbulence');
-  g('eb1').classList.toggle('on',p.em==='overlay'); g('eb2').classList.toggle('on',p.em==='soft-light'); g('eb3').classList.toggle('on',p.em==='hard-light');
+  g('eb1').classList.toggle('on',p.em==='overlay');      g('eb2').classList.toggle('on',p.em==='soft-light'); g('eb3').classList.toggle('on',p.em==='hard-light');
   g('bt1').classList.toggle('on',p.bt==='fractalNoise'); g('bt2').classList.toggle('on',p.bt==='turbulence');
-  upd(); // upd llama markDirty — correcto: los presets deben marcarse como no guardados
+  upd();
 }
 
 // ── EXPORTAR SVG ─────────────────────────────────────────────────
-function exportSVG(){
-  const svg=g('LSVG'); if(!svg)return;
+function exportSVG() {
+  const svg=g('LSVG'); if (!svg) return;
   const prevF=svg.style.filter; svg.style.filter='';
   const blob=new Blob([new XMLSerializer().serializeToString(svg)],{type:'image/svg+xml'});
   svg.style.filter=prevF;
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='etiqueta.svg'; a.click();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=svgStates[activeIdx]?.name||'etiqueta.svg';
+  a.click();
 }
 
-// ── INFO DE DIMENSIONES PNG ──────────────────────────────────────
-function updPngInfo(){
+// ── PNG ───────────────────────────────────────────────────────────
+function updPngInfo() {
   const pct=parseInt(g('pngScaleR').value);
-  const w=Math.round(VW*pct/100), h=Math.round(VH*pct/100);
   g('pngScaleV').textContent=pct+'%';
-  g('pngPxInfo').textContent=w+' x '+h+' px';
+  g('pngPxInfo').textContent=Math.round(VW*pct/100)+' x '+Math.round(VH*pct/100)+' px';
 }
 
-// ── EXPORTAR PNG ─────────────────────────────────────────────────
-function exportPNG(){
-  const svg=g('LSVG'); if(!svg)return;
+function exportPNG() {
+  const svg=g('LSVG'); if (!svg) return;
   const pct=parseInt(g('pngScaleR').value);
   const w=Math.round(VW*pct/100), h=Math.round(VH*pct/100);
   const prevF=svg.style.filter; svg.style.filter='';
@@ -726,21 +919,17 @@ function exportPNG(){
   const img=new Image();
   img.onload=function(){
     fill.style.width='60%';
-    const canvas=document.createElement('canvas');
-    canvas.width=w; canvas.height=h;
+    const canvas=document.createElement('canvas'); canvas.width=w; canvas.height=h;
     const ctx=canvas.getContext('2d');
-    const sat=gv('satR');
-    ctx.filter='saturate('+sat.toFixed(2)+')';
-    ctx.drawImage(img,0,0,w,h);
-    ctx.filter='none';
-    URL.revokeObjectURL(url);
-    fill.style.width='90%';
+    ctx.filter='saturate('+gv('satR').toFixed(2)+')';
+    ctx.drawImage(img,0,0,w,h); ctx.filter='none';
+    URL.revokeObjectURL(url); fill.style.width='90%';
+    const baseName=(svgStates[activeIdx]?.name||'etiqueta').replace(/\.[^.]+$/,'');
     setTimeout(function(){
       canvas.toBlob(function(pngBlob){
         const a=document.createElement('a');
-        a.download='etiqueta_'+pct+'pct.png';
-        a.href=URL.createObjectURL(pngBlob);
-        a.click();
+        a.download=baseName+'_'+pct+'pct.png';
+        a.href=URL.createObjectURL(pngBlob); a.click();
         fill.style.width='100%';
         setTimeout(function(){bar.classList.remove('show'); fill.style.width='0%';},600);
       },'image/png');
@@ -754,18 +943,64 @@ function exportPNG(){
   img.src=url;
 }
 
-// ── ARRANQUE ─────────────────────────────────────────────────────
-(async()=>{
-  await initSVG();
-  setup();
-  initWithPersistence();
+// ── INIT CON PERSISTENCIA ────────────────────────────────────────
+//
+// Prioridad por SVG:
+//   1. Config en URL (svgName coincide) → prevalece, se guarda en LS
+//   2. Config en LS                     → se aplica
+//   3. Sin config                       → preset de meta.svgs[name].filter
 
-  setTimeout(() => {
-    if (_savedCfg) {
-      applyConfig(_savedCfg);
+function initWithPersistence() {
+  const urlCfg=getURLConfig();
+  _suppressDirty=true;
+  try {
+    // Aplicar configs a cada SvgState (incluso los no activos, off-DOM)
+    for (const st of svgStates) {
+      let cfg=null;
+      if (urlCfg?.svgName===st.name) {
+        cfg=urlCfg;
+        saveLS(LS_PREFIX+st.name, cfg);
+        history.replaceState(null,'',window.location.pathname);
+      } else {
+        cfg=loadLS(LS_PREFIX+st.name);
+      }
+      if (cfg) applyConfigToState(st, cfg);
+      else     st.filterState=presetToFilterState(st.filterPreset);
     }
-  }, 0);
 
+    // Si la URL apunta a otro tab, hacer switchTab silencioso
+    if (urlCfg?.svgName) {
+      const targetIdx=svgStates.findIndex(s=>s.name===urlCfg.svgName);
+      if (targetIdx>=0 && targetIdx!==activeIdx) {
+        const sw=g('SW');
+        sw.removeChild(svgStates[activeIdx].el);
+        activeIdx=targetIdx;
+        sw.appendChild(svgStates[activeIdx].el);
+        VW=svgStates[activeIdx].VW; VH=svgStates[activeIdx].VH;
+        sw.style.height=Math.round((sw.offsetWidth||540)*VH/VW)+'px';
+        document.querySelectorAll('.tab-btn').forEach((btn,i)=>btn.classList.toggle('active',i===activeIdx));
+      }
+    }
+
+    // Aplicar estado de filtros del SVG activo a los sliders
+    const fs=svgStates[activeIdx].filterState;
+    if (fs) restoreFilterState(fs);
+    else    applyP(svgStates[activeIdx].filterPreset);
+
+    // Reconstruir UI con colores correctos
+    buildColorUI();
+    updPngInfo();
+
+  } finally { _suppressDirty=false; }
+  markClean();
+}
+
+// ── ARRANQUE ─────────────────────────────────────────────────────
+(async () => {
+  meta = await loadMeta();       // Cargar label-meta.json
+  await loadAllSVGs();           // Cargar SVGs, parsear, inyectar filtros
+  buildTabUI();                  // Crear pestañas si hay múltiples SVGs
+  initWithPersistence();         // Aplicar config guardada o preset (llama buildColorUI internamente)
 })();
 </script>
 </body>
